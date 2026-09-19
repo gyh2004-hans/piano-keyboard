@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "id": "public-domain-exercise",
+  "title": "Public Domain Exercise",
+  "bars": 4,
+  "timeSignature": [4, 4],
+  "ticksPerBeat": 4,
+  "tempoMap": [
+    { "bar": 1, "tick": 0, "bpm": 96 },
+    { "bar": 3, "tick": 0, "bpm": 108 }
+  ],
+  "events": [
+    { "bar": 1, "tick": 0, "duration": 4, "hand": "L", "notes": ["C3", "G3"], "tie": false, "source": { "page": 1, "region": "system-1" } },
+    { "bar": 1, "tick": 0, "duration": 4, "hand": "R", "notes": ["C4", "E4", "G4"], "tie": false, "source": { "page": 1, "region": "system-1" } },
+    { "bar": 1, "tick": 8, "duration": 8, "hand": "R", "notes": ["D4"], "tie": true, "source": { "page": 1, "region": "system-1" } },
+    { "bar": 2, "tick": 0, "duration": 4, "hand": "L", "notes": ["F2", "C3"], "tie": false, "source": { "page": 1, "region": "system-1" } },
+    { "bar": 2, "tick": 8, "duration": 4, "hand": "R", "notes": ["E4", "G4"], "tie": false, "source": { "page": 1, "region": "system-1" } },
+    { "bar": 3, "tick": 0, "duration": 8, "hand": "L", "notes": ["G2", "D3"], "tie": false, "source": { "page": 1, "region": "system-2" } },
+    { "bar": 3, "tick": 4, "duration": 4, "hand": "R", "notes": ["F4", "A4"], "tie": false, "source": { "page": 1, "region": "system-2" } },
+    { "bar": 4, "tick": 0, "duration": 16, "hand": "L", "notes": ["C3", "G3"], "tie": false, "source": { "page": 1, "region": "system-2" } },
+    { "bar": 4, "tick": 0, "duration": 16, "hand": "R", "notes": ["C4", "E4", "G4"], "tie": false, "source": { "page": 1, "region": "system-2" } }
+  ],
+  "uncertainties": [
+    { "status": "confirmed", "page": 1, "bar": 1, "message": "Opening chord verified against the source." }
+  ]
+}

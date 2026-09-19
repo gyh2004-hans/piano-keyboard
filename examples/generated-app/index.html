@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Piano Keyboard · Reference Output</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header><div><small>PIANO KEYBOARD · REFERENCE OUTPUT</small><h1>慢慢弹</h1></div><p>两排字母，自动配键。</p></header>
+  <main class="layout">
+    <aside class="library" aria-label="曲目">
+      <strong>选择曲目</strong>
+      <button class="song active"><span>♪</span><span><b>Public Domain Exercise</b><small>4 小节 · 公版示例</small></span></button>
+      <p>此页面是 Skill 的验收输出，不是供复制的应用模板。</p>
+    </aside>
+
+    <section class="practice" aria-label="跟练区">
+      <div class="practice-head"><div><small>AUTO KEYS</small><h2>Public Domain Exercise</h2><p>桌面跟练 · 4/4 · ♩ = 96</p></div><button id="restart">↻ 重新开始</button></div>
+      <div class="exercise">
+        <div class="status"><span id="status">准备开始</span><span id="progressText">0 / 5 音组</span></div>
+        <div class="progress"><i id="progressBar"></i></div>
+        <div class="prompt">
+          <div id="promptLabel">准备好后点击开始跟练</div>
+          <div class="prompt-main" id="promptMain"></div>
+          <div id="feedback">和弦需要同时按齐；长音可以提前松开。</div>
+        </div>
+        <div class="queue-head"><span>接下来要弹的音组</span><span>只显示键盘字母</span></div>
+        <div class="queue" id="queue" data-queue-format="letters"></div>
+      </div>
+      <div class="keyboard-zone">
+        <div class="keyboard-title"><span>电脑键盘</span><span>Q–P / A–L</span></div>
+        <div id="computerKeyboard" class="computer-keyboard"></div>
+        <details><summary>查看 61 键音高对照 · C2–C7</summary><div class="piano-scroll"><div id="piano61" class="piano61"></div></div></details>
+      </div>
+      <footer><span>完成音组 <b id="completed">0</b></span><span>按键准确率 <b id="accuracy">—</b></span><label>音量 <input id="volume" type="range" min="0" max="100" value="55"></label></footer>
+    </section>
+
+    <aside class="settings" aria-label="设置与提示">
+      <h2>练习设置 <small>SETTINGS</small></h2>
+      <div class="modes" id="modes">
+        <button data-mode="auto" class="selected">旋律＋自动伴奏</button><button data-mode="both">双手</button>
+        <button data-mode="right">仅右手</button><button data-mode="left">仅左手</button>
+        <button data-mode="demo">自动示范</button><button data-mode="free">自由演奏</button>
+      </div>
+      <label>练习速度 <select id="speed"><option value="0.5">0.5 倍</option><option value="0.75">0.75 倍</option><option value="1" selected>原速</option></select></label>
+      <button class="primary" id="practiceToggle">▶ 开始跟练</button>
+
+      <section class="metronome" id="metronome">
+        <div class="metronome-head"><strong>节拍器</strong><span>独立摆件</span></div>
+        <div class="pendulum"><i></i></div>
+        <label>BPM <input id="metronomeBpm" type="number" min="30" max="240" value="96"></label>
+        <label>速度 <select id="metronomeSpeed"><option value="1">曲谱速度</option><option value="0.5">0.5 倍</option><option value="0.75">0.75 倍</option><option value="custom">自定义</option></select></label>
+        <button id="metronomeToggle">▶ 开启节拍器</button>
+        <p id="beatText">4/4 · 第 1 拍</p>
+      </section>
+
+      <h2>演奏提示 <small>PLAYING GUIDE</small></h2>
+      <ul><li>每个音组会自动重新分配键位。</li><li>按住的键保持原音，松开后才能重配。</li><li>低音偏左，高音偏右；优先使用基准键区。</li></ul>
+    </aside>
+  </main>
+  <script src="score.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

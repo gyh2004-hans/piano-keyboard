@@ -1,0 +1,7 @@
+interface:
+  display_name: "Piano Keyboard"
+  short_description: "Build ergonomic keyboard piano practice apps"
+  brand_color: "#327758"
+  default_prompt: "Use $piano-keyboard to turn my piano score images or PDF into an offline keyboard practice app."
+policy:
+  allow_implicit_invocation: true

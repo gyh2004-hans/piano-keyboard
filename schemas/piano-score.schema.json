@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/piano-keyboard/piano-score.schema.json",
+  "title": "Piano Keyboard Score",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "bars", "timeSignature", "ticksPerBeat", "tempoMap", "events", "uncertainties"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "bars": { "type": "integer", "minimum": 1 },
+    "timeSignature": {
+      "type": "array", "prefixItems": [{ "type": "integer", "minimum": 1 }, { "enum": [1, 2, 4, 8, 16] }], "minItems": 2, "maxItems": 2
+    },
+    "ticksPerBeat": { "type": "integer", "minimum": 1 },
+    "tempoMap": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "required": ["bar", "tick", "bpm"], "properties": { "bar": { "type": "integer", "minimum": 1 }, "tick": { "type": "integer", "minimum": 0 }, "bpm": { "type": "number", "exclusiveMinimum": 0 } } }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["bar", "tick", "duration", "hand", "notes"],
+        "properties": {
+          "id": { "type": "string" }, "bar": { "type": "integer", "minimum": 1 }, "tick": { "type": "integer", "minimum": 0 }, "duration": { "type": "number", "exclusiveMinimum": 0 },
+          "hand": { "enum": ["L", "R"] }, "notes": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[A-G](#|b)?-?[0-9]+$" } }, "tie": { "type": "boolean" }
+        }
+      }
+    },
+    "uncertainties": { "type": "array" }
+  }
+}
