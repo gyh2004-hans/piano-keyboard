@@ -1,42 +1,119 @@
-<p align="center"><img src="docs/assets/hero.svg" alt="Piano Keyboard：35 键半音映射与流水线钢琴跟练" width="100%"></p>
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="Piano Keyboard：从钢琴曲谱到离线跟练网页" width="100%">
+</p>
 
 <h1 align="center">Piano Keyboard</h1>
-<p align="center"><strong>读入曲谱，跟随流水线字符，在电脑键盘上弹奏。</strong></p>
-<p align="center">Agent Skill · 固定 35 键半音布局 · 自动音区 · 桌面离线网页</p>
 
-<p align="center"><a href="README.md"><strong>简体中文</strong></a> · <a href="README.en.md">English</a></p>
+<p align="center"><strong>把钢琴曲谱变成真正可弹、可测、可离线运行的键盘跟练网页。</strong></p>
+
+<p align="center">
+  <a href="README.md"><strong>简体中文</strong></a> ·
+  <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
+  <img alt="Skill version 2.0.0" src="https://img.shields.io/badge/Skill-v2.0.0-315c49?style=flat-square">
+  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-c89b52?style=flat-square">
+  <img alt="Offline output" src="https://img.shields.io/badge/Output-Offline-7fa36a?style=flat-square">
+  <img alt="Node.js 20 or newer" src="https://img.shields.io/badge/Node.js-20%2B-315c49?style=flat-square">
+</p>
 
 ---
 
-## 这是什么
-
-`piano-keyboard` 指导 Agent 从钢琴曲谱图片、PDF 或结构化数据生成离线跟练网页。v2 使用固定的 35 键半音布局，按音组自动切换共享或左右手独立八度；上方流水线、中间电脑键盘高亮和下方 61 键钢琴保持同步。
-
-仓库提供 Agent 工作流、数据 Schema、可执行映射/练习模型、参考应用和自动化验收。它不是独立 OCR 服务，也不包含商业曲谱。
-
-## 快速安装
+## 一条命令开始
 
 ```bash
 npx skills add gyh2004-hans/piano-keyboard
 ```
 
-Codex 在 Windows 上可使用复制安装：
+安装后，把曲谱图片或 PDF 交给 Agent，并明确调用 `$piano-keyboard`。Skill 会组织识谱确认、结构化建模、键位分析、离线网页实现和浏览器验收，而不只是生成一张“看起来像钢琴”的页面。
+
+> [!TIP]
+> 已安装过？运行 `npx skills update piano-keyboard` 获取仓库中的最新版本。
+
+## 真实效果
+
+<p align="center">
+  <img src="docs/assets/piano-keyboard-demo.gif" alt="Piano Keyboard 真实参考应用：流水线、键盘高亮与 61 键钢琴同步演示" width="100%">
+</p>
+
+<p align="center"><sub>真实参考应用录制：自动示范、流水线推进、统一键盘提示与暂停/继续。</sub></p>
+
+## 它解决什么问题
+
+| 🎼 可靠识谱 | ⌨️ 确定性映射 |
+|---|---|
+| 清点全部页面、小节、双手、音高、时值、连音、反复与速度；把疑点集中交给用户确认。 | 固定 35 键半音序列，优先共享音区，必要时允许左右手分别自动切换八度。 |
+| **🎹 完整跟练体验** | **✅ 可验证交付** |
+| 流水线、四排键盘高亮、61 键钢琴、曲库、原谱、伴奏、速度、统计和节拍器协同工作。 | Schema、映射分析、练习状态机、真实浏览器与安装副本均有自动化检查。 |
+
+输出是纯本地 HTML/CSS/JavaScript 与 Web Audio 应用，没有运行时网络依赖。仓库提供的是 Agent Skill、规范、工具、测试和公版参考应用，不是独立 OCR 服务，也不附带商业曲谱。
+
+## 安装与更新
+
+### 通用方式
+
+| 场景 | 命令 |
+|---|---|
+| 安装 | `npx skills add gyh2004-hans/piano-keyboard` |
+| 更新当前安装 | `npx skills update piano-keyboard` |
+| 更新项目级安装 | `npx skills update piano-keyboard -p -y` |
+| 更新全局安装 | `npx skills update piano-keyboard -g -y` |
+
+`-p` 指定项目级范围，`-g` 指定全局范围，`-y` 跳过交互确认。`skills update` 适用于由 Skills CLI 安装并记录的 Skill；完整参数以 [Skills CLI 文档](https://skills.sh/docs/cli) 为准。
+
+### Codex + Windows
+
+如果希望在 Codex 中全局使用，并通过复制文件避免符号链接权限问题：
 
 ```bash
 npx skills add gyh2004-hans/piano-keyboard --skill piano-keyboard --agent codex --global --copy --yes
 ```
 
-安装后可这样请求：
+之后使用全局更新：
 
-```text
-$piano-keyboard 识别我上传的全部曲谱页面，集中列出不确定内容。
-确认后生成离线 PC 跟练网页：使用 35 键半音映射和自动音区，中心依次显示
-流水线、四排键盘高亮、61 键钢琴；保留和弦、长音、伴奏、速度和统计功能。
+```bash
+npx skills update piano-keyboard -g -y
 ```
 
-## v2 核心契约
+## 推荐提示词
 
-### 四排实体键盘，35 键标准映射
+```text
+$piano-keyboard 识别我上传的全部曲谱页面，先集中列出不确定内容供我确认。
+确认后生成离线 PC 跟练网页：使用 35 键半音映射和自动音区；中心从上到下显示
+流水线、四排键盘高亮和 61 键钢琴；保留和弦、长音、自动伴奏、速度和统计功能。
+完成后运行数据、映射和真实浏览器验收，并报告仍存在的限制。
+```
+
+## 从曲谱到可交付网页
+
+```text
+曲谱图片 / PDF
+      ↓
+页面清点与疑点确认
+      ↓
+结构化曲谱与 Schema 校验
+      ↓
+35 键映射与左右手音区分析
+      ↓
+离线跟练网页实现
+      ↓
+单元测试 + 真实浏览器验收
+```
+
+| 阶段 | 交付要求 |
+|---|---|
+| 识谱 | 不跳页、不猜测模糊记号，保留来源与不确定性记录 |
+| 数据 | 规范化副本，不原地修改原始曲谱数据 |
+| 映射 | 报告共享/双手音区、锁定、补充键和无法覆盖的音组 |
+| 实现 | 本地资源、Web Audio、可复制目录、无运行时 CDN |
+| 验收 | 数据、映射、状态机、桌面布局、音频与关键交互均有证据 |
+
+## v2 行为契约
+
+### 35 键半音布局
+
+页面保留完整四排实体键盘外观：
 
 ```text
 1 2 3 4 5 6 7 8 9 0 - =
@@ -45,50 +122,46 @@ $piano-keyboard 识别我上传的全部曲谱页面，集中列出不确定内�
    Z X C V B N M , . /
 ```
 
-标准半音序列为：
+其中标准半音序列为：
 
 ```text
 Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 ```
 
-- 35 个标准键覆盖连续 35 个半音，基准为 MIDI 48–82。
+- 35 个标准键在切换音区前覆盖 MIDI 48–82。
 - 优先整体切换一个八度音区；跨度过大时允许左右手分别切换。
-- 按住的实体键在松开前锁定原音高。
-- `A G K 1 4 8` 只在数学上无法覆盖时作为补充键，并必须报告。
-- 不为适配键盘而静默移调、删音或改写源谱。
+- 实体键被按住期间锁定原音高，切换映射不会造成跳音。
+- `A G K 1 4 8` 只在标准键数学上无法覆盖时作为补充键，并必须显式报告。
+- 不为迁就键盘而静默移调、删音或改写源谱。
 
-### 一个可见提示源
+算法与示例见 [键位映射规范](references/keyboard-mapping.md)。
 
-流水线当前字符是唯一的可见目标集合。练习键盘的 `.target` 与示范键盘的 `.demo-note` 必须逐字符等于流水线当前组。
+### 一个提示源，三处完全一致
 
-自动伴奏可以发声，但不能多亮键；上一组仍在延续的长音也不能泄漏到下一组提示。详细诊断见 [提示一致性](references/prompt-consistency.md)。
+当前流水线字符是唯一的可见目标集合。流水线字母、中间键盘高亮和实际要求用户按下的键必须逐字符相同。
 
-### 清晰的判定规则
+自动伴奏可以发声，但不能多亮键；上一音组延续的长音也不能泄漏到下一组提示。回归模式与 DOM 集合断言见 [提示一致性规范](references/prompt-consistency.md)。
 
-- 和弦从第一个正确起音起，在 **120ms（含边界）** 内按齐。
-- 错音会发声、计入尝试和错误，但不推进音组。
-- 长音只判定起音；音组成立后可立即松开，不扣分、不等待、不冻结谱面时间。
-- 连续同音必须松开后重新按下。
+### 练习判定
 
-## 页面与功能
-
-主视图以 2560×1440、16:9 PC 为首要目标：左侧是一次显示六首的非循环滚动曲库，中间从上到下为流水线、四排键盘、61 键钢琴，右侧为练习控制。
-
-生成或修复现有项目时保留曲库、原谱查看、左右手/双手、自动伴奏、示范、自由演奏、小节范围、速度、暂停、重置、循环、音量、统计和独立节拍器等既有能力。
-
-## 从曲谱到交付
-
-| 阶段 | 必须完成 |
+| 行为 | 规则 |
 |---|---|
-| 识谱 | 清点全部页面；记录小节、双手、音高、时值、连音、反复和速度；集中确认疑点 |
-| 数据 | 校验 Schema，规范化且不修改原输入，保留来源与不确定性记录 |
-| 映射 | 分析共享/双手音区、锁定、补充键和阻塞音组 |
-| 实现 | 本地 HTML/CSS/JS 和 Web Audio；无运行时网络依赖 |
-| 验收 | 单元测试、真实浏览器、Skill 校验、压缩包检查和安装副本校验 |
+| 和弦 | 从第一个正确起音开始，必须在 **120ms（含边界）** 内按齐 |
+| 错音 | 正常发声并计入尝试与错误，但不推进当前音组 |
+| 长音 | 只判定起音；成立后可立即松开，不扣分、不等待、不冻结谱面时间 |
+| 连续同音 | 必须先松开，再重新按下 |
+
+完整状态转换见 [练习引擎规范](references/practice-engine.md)。
+
+## 页面布局与保留能力
+
+首要目标为 2560×1440、16:9 桌面浏览器：左侧是固定高度、每次完整显示六首的非循环曲库；中间依次为流水线、四排电脑键盘和 61 键钢琴；右侧集中练习设置。
+
+修复或扩展已有应用时，必须保留其曲库、原谱查看、左右手/双手、自动伴奏、自动示范、自由演奏、小节范围、速度、暂停、重置、循环、音量、统计和独立节拍器等既有能力。
 
 ## 开发与验证
 
-需要 Node.js 20+、PowerShell 和 Playwright 浏览器：
+要求 Node.js 20+、PowerShell 与可用的 Playwright 浏览器：
 
 ```powershell
 npm ci
@@ -98,7 +171,7 @@ python C:/Users/24939/.codex/skills/.system/skill-creator/scripts/quick_validate
 powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 ```
 
-独立数据命令：
+单独检查数据或生成项目：
 
 ```powershell
 node scripts/validate_score.mjs path/to/score.json
@@ -107,20 +180,22 @@ node scripts/analyze_mapping.mjs path/to/normalized.json
 node scripts/validate_project.mjs path/to/generated-app
 ```
 
-参考应用位于 [examples/generated-app](examples/generated-app)，包含合成/公版数据，仅用于观察和验收，不应整页复制。
+公版/合成参考应用位于 [examples/generated-app](examples/generated-app)。它用于观察行为和运行验收，不应被整页复制到用户项目。
 
-## 仓库导航
+## 文档与仓库导航
 
 | 路径 | 用途 |
 |---|---|
-| [SKILL.md](SKILL.md) | Agent 路由与不可违反的产品约束 |
-| [references/](references/) | 识谱、映射、状态机、提示一致性、界面、音频和验收细则 |
-| [schemas/](schemas/) | 曲谱 JSON 结构 |
-| [scripts/](scripts/) | 校验、规范化、映射分析、打包和本地安装 |
-| [tests/](tests/) | 单元与真实浏览器测试 |
+| [SKILL.md](SKILL.md) | Agent 路由、执行顺序与不可违反的产品约束 |
+| [references/](references/) | 识谱、映射、状态机、提示、界面、音频与验收细则 |
+| [schemas/](schemas/) | 曲谱 JSON Schema |
+| [scripts/](scripts/) | 校验、规范化、映射分析、打包与本地安装工具 |
+| [tests/](tests/) | 单元测试与真实浏览器测试 |
 
 ## 范围与许可
 
-首要范围是桌面浏览器；390px 只验证无页面级横向溢出，不等于完整移动端演奏支持。用户负责确认源曲谱的处理与分发权限。
+首要范围是桌面浏览器。390px 仅验证无页面级横向溢出，不代表完整移动端演奏支持。用户需要自行确认源曲谱的处理与分发权限。
 
-代码与文档采用 [MIT License](LICENSE)，该许可证不授予第三方歌曲或曲谱版权。
+代码与文档采用 [MIT License](LICENSE)。该许可证不授予任何第三方歌曲或曲谱版权。
+
+<p align="center"><strong>Bring the score. Follow the flow. Play it.</strong></p>
