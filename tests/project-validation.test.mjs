@@ -20,7 +20,7 @@ test('rejects a missing entry page', async () => {
 test('rejects remote runtime resources', async () => {
   const root = await project({
     'index.html': '<script src="https://cdn.example/app.js"></script>',
-    'app.js': 'const rows="QWERTYUIOP ASDFGHJKL"; const queueFormat="letters";',
+    'app.js': 'const rows="1234567890-= QWERTYUIOP[] ASDFGHJKL;\' ZXCVBNM,./"; const canonicalPrompt=true;',
     'styles.css': '.prompt-main{min-height:60px}'
   });
   await assert.rejects(() => validateProject(root), /remote runtime/i);
@@ -28,13 +28,25 @@ test('rejects remote runtime resources', async () => {
 
 test('rejects projects without the keyboard and stable prompt contract', async () => {
   const root = await project({ 'index.html': '<main></main>', 'app.js': '', 'styles.css': '' });
-  await assert.rejects(() => validateProject(root), /Q–P|prompt/i);
+  await assert.rejects(() => validateProject(root), /four|flow|prompt|keyboard/i);
+});
+
+test('rejects the obsolete two-row keyboard contract', async () => {
+  const root = await project({
+    'index.html': '<div id="noteFlow"></div><div id="piano61"></div>',
+    'app.js': 'const rows="QWERTYUIOP ASDFGHJKL"; function canonicalPrompt(){}',
+    'styles.css': '.prompt-main{min-height:60px}'
+  });
+  await assert.rejects(() => validateProject(root), /four physical keyboard rows/i);
 });
 
 test('accepts the generated reference app', async () => {
   const root = new URL('../examples/generated-app/', import.meta.url);
   const report = await validateProject(root);
   assert.equal(report.offline, true);
-  assert.equal(report.keyboardRows, true);
+  assert.equal(report.keyboardRows, 4);
+  assert.equal(report.noteFlow, true);
+  assert.equal(report.pianoKeys, 61);
+  assert.equal(report.canonicalPrompt, true);
   assert.equal(report.fixedPrompt, true);
 });

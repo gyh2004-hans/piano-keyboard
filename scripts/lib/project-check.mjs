@@ -22,9 +22,12 @@ export async function validateProject(input) {
   const source = contents.join('\n');
   const errors = [];
   if (/\b(?:https?:)?\/\//i.test(source)) errors.push('Remote runtime resource found; generated apps must work offline');
-  if (!source.includes('QWERTYUIOP') || !source.includes('ASDFGHJKL')) errors.push('Q–P / A–L keyboard rows are missing');
-  if (!/data-queue-format=["']letters["']/.test(source)) errors.push('Next-group queue must declare letter-only format');
-  if (!/\.prompt-main[^}]*\b(?:min-height|height)\s*:/s.test(source)) errors.push('The prompt region needs a fixed or minimum footprint to prevent layout movement');
+  const rows = ['1234567890-=', 'QWERTYUIOP[]', "ASDFGHJKL;'", 'ZXCVBNM,./'];
+  if (!rows.every(row => source.includes(row))) errors.push('All four physical keyboard rows are required');
+  if (!/id=["']noteFlow["']/.test(source)) errors.push('A note flow lane with id="noteFlow" is required');
+  if (!/id=["']piano61["'][^>]*data-key-count=["']61["']/.test(source)) errors.push('The center piano must declare all 61 keys');
+  if (!/\bcanonicalPrompt\b/.test(source)) errors.push('Flow and keyboard targets must use a canonicalPrompt source');
+  if (!/\.note-flow[^}]*\b(?:min-height|height)\s*:/s.test(source)) errors.push('The flow prompt region needs a fixed or minimum footprint to prevent layout movement');
   if (errors.length) throw new AggregateError(errors.map(message => new Error(message)), errors.join('\n'));
-  return { root, files: files.length, offline: true, keyboardRows: true, fixedPrompt: true };
+  return { root, files: files.length, offline: true, keyboardRows: 4, noteFlow: true, pianoKeys: 61, canonicalPrompt: true, fixedPrompt: true };
 }
