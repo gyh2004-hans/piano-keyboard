@@ -2,8 +2,6 @@
   <img src="docs/assets/hero.svg" alt="Piano Keyboard：从钢琴曲谱到离线跟练网页" width="100%">
 </p>
 
-<h1 align="center">Piano Keyboard</h1>
-
 <p align="center"><strong>把钢琴曲谱变成真正可弹、可测、可离线运行的键盘跟练网页。</strong></p>
 
 <p align="center">
@@ -18,34 +16,31 @@
   <img alt="Node.js 20 or newer" src="https://img.shields.io/badge/Node.js-20%2B-315c49?style=flat-square">
 </p>
 
+<p align="center">
+  <a href="#一条命令开始">快速开始</a> &nbsp;·&nbsp;
+  <a href="#真实效果">效果演示</a> &nbsp;·&nbsp;
+  <a href="#安装与更新">安装与更新</a> &nbsp;·&nbsp;
+  <a href="#开发与验证">开发指南</a>
+</p>
+
 ---
 
-## 一条命令开始
 
-```bash
-npx skills add gyh2004-hans/piano-keyboard
-```
 
-安装后，把曲谱图片或 PDF 交给 Agent，并明确调用 `$piano-keyboard`。Skill 会组织识谱确认、结构化建模、键位分析、离线网页实现和浏览器验收，而不只是生成一张“看起来像钢琴”的页面。
-
-> [!TIP]
-> 已安装过？运行 `npx skills update piano-keyboard` 获取仓库中的最新版本。
-
-## 真实效果
 
 <p align="center">
   <img src="docs/assets/piano-keyboard-demo.gif" alt="Piano Keyboard 真实参考应用：流水线、键盘高亮与 61 键钢琴同步演示" width="100%">
 </p>
 
-<p align="center"><sub>真实参考应用录制：自动示范、流水线推进、统一键盘提示与暂停/继续。</sub></p>
 
 ## 它解决什么问题
 
-| 🎼 可靠识谱 | ⌨️ 确定性映射 |
-|---|---|
-| 清点全部页面、小节、双手、音高、时值、连音、反复与速度；把疑点集中交给用户确认。 | 固定 35 键半音序列，优先共享音区，必要时允许左右手分别自动切换八度。 |
-| **🎹 完整跟练体验** | **✅ 可验证交付** |
-| 流水线、四排键盘高亮、61 键钢琴、曲库、原谱、伴奏、速度、统计和节拍器协同工作。 | Schema、映射分析、练习状态机、真实浏览器与安装副本均有自动化检查。 |
+| 能力 | 你会得到 |
+|:---|:---|
+| **识谱确认** | 完整页面清点、双手与节奏识别，疑点集中确认 |
+| **键位映射** | 固定 35 键半音布局，左右手自动切换音区 |
+| **离线跟练** | 流水线提示、四排键盘高亮、61 键钢琴与伴奏 |
+| **交付验收** | 数据校验、映射分析、状态机与真实浏览器检查 |
 
 输出是纯本地 HTML/CSS/JavaScript 与 Web Audio 应用，没有运行时网络依赖。仓库提供的是 Agent Skill、规范、工具、测试和公版参考应用，不是独立 OCR 服务，也不附带商业曲谱。
 
@@ -87,19 +82,7 @@ $piano-keyboard 识别我上传的全部曲谱页面，先集中列出不确定�
 
 ## 从曲谱到可交付网页
 
-```text
-曲谱图片 / PDF
-      ↓
-页面清点与疑点确认
-      ↓
-结构化曲谱与 Schema 校验
-      ↓
-35 键映射与左右手音区分析
-      ↓
-离线跟练网页实现
-      ↓
-单元测试 + 真实浏览器验收
-```
+**01 识谱确认 → 02 数据建模 → 03 键位映射 → 04 离线实现 → 05 验收交付**
 
 | 阶段 | 交付要求 |
 |---|---|
@@ -111,7 +94,11 @@ $piano-keyboard 识别我上传的全部曲谱页面，先集中列出不确定�
 
 ## v2 行为契约
 
-### 35 键半音布局
+35 键覆盖连续半音，61 键钢琴保留完整演奏视图；宽跨度音组允许左右手独立换区。
+
+<details>
+<summary><strong>展开键位布局与映射规则</strong></summary>
+
 
 页面保留完整四排实体键盘外观：
 
@@ -136,6 +123,8 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 
 算法与示例见 [键位映射规范](references/keyboard-mapping.md)。
 
+</details>
+
 ### 一个提示源，三处完全一致
 
 当前流水线字符是唯一的可见目标集合。流水线字母、中间键盘高亮和实际要求用户按下的键必须逐字符相同。
@@ -153,21 +142,20 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 
 完整状态转换见 [练习引擎规范](references/practice-engine.md)。
 
-## 页面布局与保留能力
 
-首要目标为 2560×1440、16:9 桌面浏览器：左侧是固定高度、每次完整显示六首的非循环曲库；中间依次为流水线、四排电脑键盘和 61 键钢琴；右侧集中练习设置。
-
-修复或扩展已有应用时，必须保留其曲库、原谱查看、左右手/双手、自动伴奏、自动示范、自由演奏、小节范围、速度、暂停、重置、循环、音量、统计和独立节拍器等既有能力。
 
 ## 开发与验证
 
-要求 Node.js 20+、PowerShell 与可用的 Playwright 浏览器：
+要求 Node.js 20+、PowerShell 与可用的 Playwright 浏览器。
+
+<details>
+<summary><strong>展开开发、测试与数据校验命令</strong></summary>
+
 
 ```powershell
 npm ci
 npm run validate
 npm run test:browser -- --reporter=line
-python C:/Users/24939/.codex/skills/.system/skill-creator/scripts/quick_validate.py .
 powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 ```
 
@@ -181,6 +169,8 @@ node scripts/validate_project.mjs path/to/generated-app
 ```
 
 公版/合成参考应用位于 [examples/generated-app](examples/generated-app)。它用于观察行为和运行验收，不应被整页复制到用户项目。
+
+</details>
 
 ## 文档与仓库导航
 
@@ -198,4 +188,7 @@ node scripts/validate_project.mjs path/to/generated-app
 
 代码与文档采用 [MIT License](LICENSE)。该许可证不授予任何第三方歌曲或曲谱版权。
 
-<p align="center"><strong>Bring the score. Follow the flow. Play it.</strong></p>
+---
+
+<p align="center"><sub>Bring the score. Follow the flow. Play it.</sub><br>
+<a href="#一条命令开始">开始安装</a> · <a href="LICENSE">MIT License</a></p>

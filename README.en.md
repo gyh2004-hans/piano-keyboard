@@ -2,8 +2,6 @@
   <img src="docs/assets/hero.svg" alt="Piano Keyboard — from piano score to offline practice app" width="100%">
 </p>
 
-<h1 align="center">Piano Keyboard</h1>
-
 <p align="center"><strong>Turn a piano score into a playable, testable, fully offline keyboard-practice app.</strong></p>
 
 <p align="center">
@@ -18,6 +16,13 @@
   <img alt="Node.js 20 or newer" src="https://img.shields.io/badge/Node.js-20%2B-315c49?style=flat-square">
 </p>
 
+<p align="center">
+  <a href="#start-with-one-command">Quick start</a> &nbsp;·&nbsp;
+  <a href="#see-it-in-action">Demo</a> &nbsp;·&nbsp;
+  <a href="#install-and-update">Install &amp; update</a> &nbsp;·&nbsp;
+  <a href="#development-and-validation">Development</a>
+</p>
+
 ---
 
 ## Start with one command
@@ -26,7 +31,7 @@
 npx skills add gyh2004-hans/piano-keyboard
 ```
 
-After installation, give your Agent the score images or PDF and invoke `$piano-keyboard` explicitly. The Skill guides score confirmation, structured modeling, key analysis, offline implementation, and browser acceptance—not just a page that happens to look like a piano.
+Give your Agent a score image or PDF and invoke `$piano-keyboard`. One workflow takes you from confirmed notation and key mapping to an offline app with browser acceptance checks.
 
 > [!TIP]
 > Already installed? Run `npx skills update piano-keyboard` to get the latest repository version.
@@ -41,11 +46,12 @@ After installation, give your Agent the score images or PDF and invoke `$piano-k
 
 ## What it solves
 
-| 🎼 Reliable recognition | ⌨️ Deterministic mapping |
-|---|---|
-| Inventory every page, measure, hand, pitch, duration, tie, repeat, and tempo; collect uncertainty for user confirmation. | Use a fixed 35-key chromatic sequence with a shared octave bank first and independent left/right banks when necessary. |
-| **🎹 Complete practice experience** | **✅ Verifiable delivery** |
-| Coordinate the flow lane, four-row keyboard, 61-key piano, library, source score, accompaniment, speed, statistics, and metronome. | Check the schema, mapping analysis, practice state machine, real browser, and installed copy automatically. |
+| Capability | What you get |
+|:---|:---|
+| **Score confirmation** | Complete page inventory, hands and rhythm, uncertainty review |
+| **Key mapping** | A fixed 35-key chromatic layout with automatic hand banks |
+| **Offline practice** | Note flow, four-row key highlights, 61-key piano, accompaniment |
+| **Verified delivery** | Data validation, mapping analysis, state-machine and browser checks |
 
 The output is a local HTML/CSS/JavaScript and Web Audio application with no runtime network dependency. This repository contains an Agent Skill, specifications, tools, tests, and a public-domain reference app. It is not a standalone OCR service and does not bundle commercial scores.
 
@@ -88,19 +94,7 @@ Run data, mapping, and real-browser acceptance checks, then report any remaining
 
 ## From score to deliverable
 
-```text
-Score images / PDF
-        ↓
-Page inventory and uncertainty review
-        ↓
-Structured score and schema validation
-        ↓
-35-key mapping and hand-bank analysis
-        ↓
-Offline practice-app implementation
-        ↓
-Unit tests + real-browser acceptance
-```
+**01 Confirm → 02 Model → 03 Map → 04 Build → 05 Verify**
 
 | Stage | Delivery requirement |
 |---|---|
@@ -112,7 +106,11 @@ Unit tests + real-browser acceptance
 
 ## Version 2 behavior contract
 
-### 35-key chromatic layout
+35 computer keys cover consecutive semitones; a 61-key piano preserves the playing view. Wide groups can use independent octave banks for each hand.
+
+<details>
+<summary><strong>Expand the key layout and mapping rules</strong></summary>
+
 
 Render the complete four-row physical keyboard:
 
@@ -136,6 +134,8 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 - Never silently transpose, delete, or rewrite source events to make mapping easier.
 
 See the [key-mapping specification](references/keyboard-mapping.md) for the algorithm and worked examples.
+
+</details>
 
 ### One prompt source, three exact views
 
@@ -162,13 +162,16 @@ When repairing or extending an existing app, preserve its library, original-scor
 
 ## Development and validation
 
-Requires Node.js 20+, PowerShell, and an available Playwright browser:
+Requires Node.js 20+, PowerShell, and an available Playwright browser.
+
+<details>
+<summary><strong>Expand development, testing, and data-validation commands</strong></summary>
+
 
 ```powershell
 npm ci
 npm run validate
 npm run test:browser -- --reporter=line
-python C:/Users/24939/.codex/skills/.system/skill-creator/scripts/quick_validate.py .
 powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 ```
 
@@ -182,6 +185,8 @@ node scripts/validate_project.mjs path/to/generated-app
 ```
 
 The public-domain/synthetic reference app lives in [examples/generated-app](examples/generated-app). Use it to inspect behavior and run acceptance checks; do not copy it wholesale into a user project.
+
+</details>
 
 ## Documentation and repository map
 
@@ -199,4 +204,7 @@ Desktop browsers are the primary scope. The 390px check proves only that there i
 
 Code and documentation use the [MIT License](LICENSE). It grants no rights to third-party songs or scores.
 
-<p align="center"><strong>Bring the score. Follow the flow. Play it.</strong></p>
+---
+
+<p align="center"><sub>Bring the score. Follow the flow. Play it.</sub><br>
+<a href="#start-with-one-command">Get started</a> · <a href="LICENSE">MIT License</a></p>
