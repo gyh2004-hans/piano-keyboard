@@ -1,7 +1,7 @@
 interface:
   display_name: "Piano Keyboard"
-  short_description: "Build ergonomic keyboard piano practice apps"
+  short_description: "Build offline flow-based piano practice apps"
   brand_color: "#327758"
-  default_prompt: "Use $piano-keyboard to turn my piano score images or PDF into an offline keyboard practice app."
+  default_prompt: "Use $piano-keyboard to turn my piano score images or PDF into an offline flow-based practice app with the fixed 35-key chromatic layout, automatic octave banks, and a 61-key piano."
 policy:
   allow_implicit_invocation: true
