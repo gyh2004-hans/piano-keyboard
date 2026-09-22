@@ -5,7 +5,7 @@
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
-    "test": "node --test tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/project-validation.test.mjs",
+    "test": "node --test tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/prompt-state.test.mjs tests/project-validation.test.mjs",
     "test:browser": "playwright test tests/browser.test.mjs",
     "validate": "node scripts/validate_score.mjs examples/public-domain-score/score.json && node scripts/validate_project.mjs examples/generated-app && npm test"
   },
