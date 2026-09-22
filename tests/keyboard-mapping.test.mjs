@@ -1,41 +1,52 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ALLOWED_LABELS, KEYS, allocate, simplifyTargets } from '../scripts/lib/keyboard-mapping.mjs';
+import { ALLOWED_LABELS, STANDARD_KEYS, allocate } from '../scripts/lib/keyboard-mapping.mjs';
+import { midi } from '../scripts/lib/score.mjs';
 
 const target = (note, hand = 'R', role = hand === 'R' ? 'melody' : 'accompaniment') => ({ note, hands: [hand], role });
+const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const noteFromMidi = value => `${NAMES[value % 12]}${Math.floor(value / 12) - 1}`;
 
-test('uses exactly the Q-P and A-L rows', () => {
-  assert.deepEqual(ALLOWED_LABELS, [...'QWERTYUIOPASDFGHJKL']);
+test('uses the fixed 35-key chromatic layout', () => {
+  assert.deepEqual(ALLOWED_LABELS, [..."Q2W3ER5T6Y7UI9O0PZSXDCFVBHNJM,L.;/'"]);
+  assert.equal(STANDARD_KEYS.length, 35);
+  assert.deepEqual(STANDARD_KEYS.map(key => key.base), Array.from({ length: 35 }, (_, i) => 48 + i));
 });
 
-test('orders pitches left to right and favors home keys', () => {
-  const result = allocate([target('C4'), target('E4'), target('G4')]);
-  const bindings = ['C4', 'E4', 'G4'].map(note => result.targets.get(note));
-  assert.ok(bindings.every(Boolean));
-  assert.ok(bindings.every((x, i, a) => i === 0 || a[i - 1].x <= x.x));
-  assert.ok(bindings.every(x => 'JKLP'.includes(x.label)));
+test('moves one shared octave bank without folding intervals', () => {
+  const result = allocate([target('C3', 'L'), target('E4'), target('G4')]);
+  assert.equal(result.blocked, false);
+  assert.equal(result.shifts.L, result.shifts.R);
+  assert.equal(midi(result.targets.get('G4').note) - midi(result.targets.get('E4').note), 3);
 });
 
-test('reuses prior bindings and preserves held locks', () => {
-  const first = allocate([target('C4'), target('E4')]);
-  const second = allocate([target('C4'), target('G4')], first.byCode);
-  assert.equal(second.targets.get('C4').label, first.targets.get('C4').label);
-  const locks = new Map([['KeyA', 'C3']]);
-  const locked = allocate([target('C3', 'L'), target('E3', 'L')], new Map(), locks);
-  assert.equal(locked.byCode.get('KeyA').note, 'C3');
+test('uses independent hand banks for a wide two-hand group', () => {
+  const result = allocate([target('C2', 'L'), target('G2', 'L'), target('E5'), target('B5')]);
+  assert.equal(result.blocked, false);
+  assert.equal(result.dual, true);
+  assert.notEqual(result.shifts.L, result.shifts.R);
 });
 
-test('keeps left and right voices in their typing zones', () => {
-  const result = allocate([target('C3', 'L'), target('E3', 'L'), target('C5'), target('E5')]);
-  assert.ok(['L'].includes(result.targets.get('C3').hand));
-  assert.ok(['R'].includes(result.targets.get('C5').hand));
+test('locks a held physical code to its original pitch', () => {
+  const first = allocate([target('C4')]);
+  const code = first.targets.get('C4').code;
+  const next = allocate([target('C6')], first.byCode, new Map([[code, 'C4']]));
+  assert.equal(next.byCode.get(code).note, 'C4');
+  assert.equal(next.byCode.get(code).locked, true);
 });
 
-test('simplifies over-capacity accompaniment without deleting melody', () => {
-  const many = Array.from({ length: 22 }, (_, i) => target(`C${2 + Math.floor(i / 7)}`, 'L', i === 21 ? 'melody' : 'accompaniment'));
-  many[21] = target('C7', 'R', 'melody');
-  const out = simplifyTargets(many);
-  assert.ok(out.targets.some(x => x.note === 'C7' && x.role === 'melody'));
-  assert.ok(out.targets.length <= KEYS.length);
-  assert.ok(out.removed.length > 0);
+test('reports explicit supplemental bindings for three-octave unisons', () => {
+  const result = allocate([target('B3', 'L'), target('B4'), target('B5')]);
+  assert.equal(result.blocked, false);
+  assert.ok([...result.byCode.values()].some(binding => binding.supplemental));
+  assert.ok(result.supplemental.length > 0);
+});
+
+test('does not mutate or silently discard a blocked input group', () => {
+  const targets = Array.from({ length: 42 }, (_, i) => target(noteFromMidi(30 + i), i < 21 ? 'L' : 'R'));
+  const before = structuredClone(targets);
+  const result = allocate(targets);
+  assert.deepEqual(targets, before);
+  assert.equal(result.blocked, true);
+  assert.equal(result.requested.length, targets.length);
 });
