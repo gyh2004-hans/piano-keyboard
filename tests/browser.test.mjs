@@ -46,9 +46,9 @@ test('practice flow and keyboard use one prompt and free release has no penalty'
   expect(before.flow.length).toBeGreaterThan(0);
 
   const codes = await page.evaluate(() => window.PianoDemo.currentCodes());
-  for (const code of codes) await page.keyboard.down(code);
+  await page.evaluate(codes => codes.forEach((code, index) => window.PianoDemo.press(code, 1 + index * .03)), codes);
   await expect(page.locator('#completed')).toHaveText('1');
-  for (const code of codes) await page.keyboard.up(code);
+  await page.evaluate(codes => codes.forEach(code => window.PianoDemo.release(code)), codes);
 
   const stats = await page.evaluate(() => window.PianoDemo.stats());
   expect(stats.mistakes).toBe(0);
