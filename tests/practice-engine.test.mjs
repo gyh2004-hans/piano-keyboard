@@ -28,12 +28,43 @@ test('requires a full chord before advancing', () => {
   assert.equal(model.index, 1);
 });
 
+test('accepts a chord at 120ms and rejects it after the boundary', () => {
+  const accepted = new PracticeModel(score, { mode: 'right' });
+  accepted.resume();
+  assert.equal(accepted.press('C4', 1), 'partial');
+  assert.equal(accepted.press('E4', 1.12), 'correct');
+
+  const late = new PracticeModel(score, { mode: 'right' });
+  late.resume();
+  late.press('C4', 1);
+  assert.equal(late.press('E4', 1.121), 'late');
+  assert.equal(late.index, 0);
+});
+
 test('early release ends sound without pausing score time', () => {
   const model = new PracticeModel(score, { mode: 'right' });
   model.resume(); model.press('C4'); model.press('E4'); model.release('C4'); model.release('E4');
   model.update(2);
   assert.equal(model.time, 2);
   assert.equal(model.waiting, false);
+});
+
+test('free long-note release never pauses or reduces accuracy', () => {
+  const model = new PracticeModel(score, { mode: 'right' });
+  model.resume(); model.press('C4', 0); model.press('E4', .05);
+  model.release('C4'); model.release('E4'); model.update(2);
+  assert.equal(model.time, 2);
+  assert.equal(model.mistakes, 0);
+  assert.equal(model.accuracy, 100);
+});
+
+test('wrong notes count as audible attempts but do not satisfy the onset', () => {
+  const model = new PracticeModel(score, { mode: 'right' });
+  model.resume();
+  assert.equal(model.press('D4', 0), 'wrong');
+  assert.equal(model.index, 0);
+  assert.equal(model.mistakes, 1);
+  assert.equal(model.attempts, 1);
 });
 
 test('rests advance naturally and repeated notes require release', () => {

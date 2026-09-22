@@ -54,31 +54,53 @@ export class PracticeModel {
     this.steps = [...groups.values()].sort((a, b) => a.position - b.position);
     this.backing = this.options.mode === 'auto' ? this.score.events.filter(item => item.hand === 'L').map(event => ({ ...event, time: this.clock.at((event.bar - 1) * barTicks + event.tick) })) : [];
     this.index = 0; this.time = 0; this.backingIndex = 0; this.held = new Set(); this.armed = new Set(); this.active = new Map(); this.paused = true; this.rounds = 0;
+    this.chordStartedAt = null; this.chordExpired = false; this.correctGroups = 0;
+    this.attempts = 0; this.correctNotes = 0; this.mistakes = 0;
   }
   get current() { return this.steps[this.index]; }
   get complete() { return !this.options.loop && this.index >= this.steps.length && this.time >= this.end - EPSILON; }
   get waiting() { return Boolean(this.current && this.time >= this.current.time - EPSILON); }
   get required() { return this.current?.targets || []; }
   get mappingTargets() { return [...this.active.values(), ...(this.current?.targets || [])].filter((item, index, all) => all.findIndex(x => x.note === item.note) === index); }
+  get accuracy() { return this.attempts ? Math.round(100 * this.correctNotes / this.attempts) : null; }
   resume() { if (!this.complete) this.paused = false; }
   pause() { this.paused = true; this.releaseAll(); }
-  releaseAll() { this.held.clear(); this.armed.clear(); this.active.clear(); }
-  release(note) { this.held.delete(note); this.armed.delete(note); this.active.delete(note); }
-  press(note) {
+  resetChord() { this.armed.clear(); this.chordStartedAt = null; this.chordExpired = false; }
+  releaseAll() { this.held.clear(); this.resetChord(); }
+  release(note) {
+    this.held.delete(note);
+    this.armed.delete(note);
+    if (!(this.current?.targets || []).some(target => this.held.has(target.note))) this.resetChord();
+  }
+  press(note, inputTime = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000) {
     if (this.options.mode === 'free') { this.held.add(note); return 'free'; }
     if (this.paused || this.complete || this.held.has(note)) return 'ignored';
     const onset = this.waiting && this.current.targets.some(target => target.note === note);
     const sustain = this.active.has(note);
     if (!onset && !sustain && !this.waiting) return 'early';
     this.held.add(note);
-    if (!onset && !sustain) return 'wrong';
-    if (onset) this.armed.add(note);
+    this.attempts++;
+    if (!onset && !sustain) { this.mistakes++; return 'wrong'; }
+    if (onset) {
+      if (this.chordStartedAt === null) this.chordStartedAt = inputTime;
+      if (this.chordExpired || inputTime - this.chordStartedAt > .12 + EPSILON) {
+        this.chordExpired = true;
+        this.armed.clear();
+        this.mistakes++;
+        return 'late';
+      }
+      this.armed.add(note);
+    }
+    this.correctNotes++;
     return this.accept() ? 'correct' : 'partial';
   }
   accept() {
-    if (!this.waiting || !this.current.targets.every(target => this.held.has(target.note) && this.armed.has(target.note))) return false;
-    for (const target of this.current.targets) this.active.set(target.note, target);
-    this.index++; this.armed.clear(); return true;
+    if (!this.waiting || this.chordExpired || !this.current.targets.every(target => this.held.has(target.note) && this.armed.has(target.note))) return false;
+    for (const target of this.current.targets) {
+      const old = this.active.get(target.note);
+      this.active.set(target.note, { ...target, end: Math.max(target.end, old?.end || 0) });
+    }
+    this.index++; this.correctGroups++; this.resetChord(); return true;
   }
   update(delta) {
     if (this.paused || this.complete || this.options.mode === 'free') return [];
