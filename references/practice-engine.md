@@ -75,7 +75,7 @@ This is onset-only long-note judgment. Do not add a hidden minimum hold duration
 
 On pause, restart, song/range/hand-mode change, window blur, or document hiding:
 
-- stop every manual, accompaniment, demo, and metronome voice/timer owned by the changing session;
+- stop every manual, accompaniment, and demo voice/timer owned by the changing session;
 - clear `held`, `armed`, and chord timing;
 - rebuild allocation locks;
 - preserve or reset `active`, counters, and score time according to the named action (pause preserves position; reset/song/range change resets it).

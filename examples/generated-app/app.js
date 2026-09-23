@@ -32,7 +32,7 @@
 
   function sourceGroups(){const map=new Map();for(const event of score.events){const id=event.bar+':'+event.tick;if(!map.has(id))map.set(id,{id,bar:event.bar,tick:event.tick,targets:[]});const group=map.get(id);for(const note of event.notes)group.targets.push({note,hand:event.hand,hands:[event.hand],role:event.hand==='R'?'melody':'accompaniment',duration:event.duration});}return[...map.values()].sort((a,b)=>a.bar-b.bar||a.tick-b.tick);}
   const allGroups=sourceGroups();
-  let mode='auto',steps=[],index=0,running=false,mapping={byCode:new Map(),targets:new Map(),shift:0,shifts:{L:0,R:0}},held=new Map(),armed=new Set(),active=new Map(),chordStartedAt=null,chordExpired=false,attempts=0,correctNotes=0,correctGroups=0,mistakes=0,backingStartCount=0,audio=null,master=null,demoTimer=null,metronomeTimer=null,beat=0;
+  let mode='auto',steps=[],index=0,running=false,mapping={byCode:new Map(),targets:new Map(),shift:0,shifts:{L:0,R:0}},held=new Map(),armed=new Set(),active=new Map(),chordStartedAt=null,chordExpired=false,attempts=0,correctNotes=0,correctGroups=0,mistakes=0,backingStartCount=0,audio=null,master=null,demoTimer=null;
   const keyEls=new Map(),voices=new Map();
 
   function userTargets(group){if(!group)return[];if(mode==='both')return group.targets;if(mode==='left')return group.targets.filter(target=>target.hand==='L');if(['auto','right','demo'].includes(mode))return group.targets.filter(target=>target.hand==='R');return[];}
@@ -68,8 +68,6 @@
   $('restart').onclick=()=>{running=false;attempts=correctNotes=correctGroups=mistakes=backingStartCount=0;stopDemo();stopAll();$('practiceToggle').textContent='▶ 开始跟练';rebuildSteps();};
   $('volume').oninput=event=>{if(master)master.gain.value=event.target.value/100;};
   for(const button of document.querySelectorAll('[data-mode]'))button.onclick=()=>{mode=button.dataset.mode;document.querySelectorAll('[data-mode]').forEach(item=>item.classList.toggle('selected',item===button));running=false;stopDemo();stopAll();$('practiceToggle').textContent='▶ 开始跟练';rebuildSteps();};
-  $('metronomeToggle').onclick=()=>{if(metronomeTimer){clearInterval(metronomeTimer);metronomeTimer=null;$('metronome').classList.remove('running');$('metronomeToggle').textContent='▶ 开启节拍器';return;}ensureAudio();beat=0;const tick=()=>{beat=beat%score.timeSignature[0]+1;$('beatText').textContent=score.timeSignature.join('/')+' · 第 '+beat+' 拍';};tick();metronomeTimer=setInterval(tick,60000/Number($('metronomeBpm').value));$('metronome').classList.add('running');$('metronomeToggle').textContent='■ 关闭节拍器';};
-
   window.PianoDemo={currentCodes:()=>currentPrompt().map(item=>item.binding?.code).filter(Boolean),backingStarts:()=>backingStartCount,stats:()=>({attempts,correctNotes,correctGroups,mistakes,index}),press,release,canonicalPrompt:()=>currentPrompt().map(item=>item.label)};
   rebuildSteps();
 })();

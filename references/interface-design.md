@@ -6,7 +6,7 @@ At 2560×1440 use a three-column shell:
 
 - left: fixed-height song rail and orientation;
 - center: song/status, progress, flow lane, four-row keyboard, 61-key piano, then statistics;
-- right: hand/mode/range/speed controls, pause/reset/demo, metronome, and concise guidance.
+- right: hand/mode/range/speed controls, pause/reset/demo, and concise guidance.
 
 Brand colors and background may vary. Preserve the center order and make it visually dominant. The flow lane occupies the upper center, keyboard highlighting stays directly beneath it, and the piano anchors the bottom.
 

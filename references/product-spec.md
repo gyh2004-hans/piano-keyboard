@@ -14,7 +14,7 @@ Build or repair a local, desktop-first piano-learning page. The player follows a
 
 ## Controls to preserve
 
-When an existing app already exposes them, retain current song library, original-score viewing, left/right/both-hand selection, measure range, speed, pause/resume, reset, loop, volume, statistics, demo, free play, accompaniment, and metronome. A redesign is not permission to remove working product scope.
+When an existing app already exposes them, retain current song library, original-score viewing, left/right/both-hand selection, measure range, speed, pause/resume, reset, loop, volume, statistics, demo, free play, and accompaniment. A redesign is not permission to remove working product scope.
 
 ## Timing and scoring
 

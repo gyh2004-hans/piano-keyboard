@@ -416,7 +416,7 @@ git commit -m "test: cover flow and keyboard prompt identity"
 - Modify: `references/interface-design.md`
 - Modify: `references/product-spec.md`
 - Modify: `references/quality-checklist.md`
-- Modify: `references/audio-and-metronome.md`
+- Modify: `references/audio.md`
 
 - [ ] **Step 1: Rewrite `SKILL.md` as a router**
 
