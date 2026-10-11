@@ -202,6 +202,20 @@ The public-domain/synthetic reference app lives in [examples/generated-app](exam
 | [scripts/](scripts/) | Validation, normalization, mapping analysis, packaging, and local-install tools |
 | [tests/](tests/) | Unit and real-browser tests |
 
+## Bundled full-quality piano audio
+
+The Skill includes Salamander Grand Piano v3 by Alexander Holm: 641 unchanged
+48 kHz/24-bit stereo FLAC files (about 714 MiB), 30 recorded pitch centers and
+16 velocity layers mapped to A0–C8. Audio and upstream SFZ/Data are CC BY 3.0,
+not MIT. Keep [attribution](assets/salamander/ATTRIBUTION.md) in exported apps.
+Use the [canonical player](references/audio.md), not model-generated synthesis.
+Run `node scripts/export_audio.mjs APP_DIRECTORY` to create full offline assets
+(about 952 MiB after Base64 wrapping); run `npm run audio:preview` for audition.
+After cloning, export audio into `examples/generated-app` before opening it;
+`npm run validate` does this automatically. The player's core sampling, tuning,
+damping and sustain are implemented; SFZ/ARIA resonance and mechanical effects
+are preserved as recordings but not currently emulated.
+
 ## Scope and license
 
 Desktop browsers are the primary scope. The 390px check proves only that there is no page-level horizontal overflow; it is not a claim of complete mobile-performance support. Users are responsible for confirming the right to process and distribute source scores.

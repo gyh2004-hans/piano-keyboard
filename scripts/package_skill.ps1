@@ -4,6 +4,11 @@ $distRoot = Join-Path $skillRoot 'dist'
 $stageRoot = Join-Path $distRoot '.staging'
 $archivePath = Join-Path $distRoot 'piano-keyboard.zip'
 
+node (Join-Path $PSScriptRoot 'validate_audio.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Complete Salamander audio validation failed.' }
+node (Join-Path $PSScriptRoot 'export_audio.mjs') (Join-Path $skillRoot 'examples/generated-app')
+if ($LASTEXITCODE -ne 0) { throw 'Reference audio export failed.' }
+
 node (Join-Path $PSScriptRoot 'validate_score.mjs') (Join-Path $skillRoot 'examples/public-domain-score/score.json')
 if ($LASTEXITCODE -ne 0) { throw 'Score validation failed.' }
 node (Join-Path $PSScriptRoot 'validate_project.mjs') (Join-Path $skillRoot 'examples/generated-app')

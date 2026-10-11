@@ -50,3 +50,12 @@ test('accepts the generated reference app', async () => {
   assert.equal(report.canonicalPrompt, true);
   assert.equal(report.fixedPrompt, true);
 });
+
+test('requires the standard audio export when audio validation is requested', async () => {
+  const root=await project({
+    'index.html':'<div id="noteFlow"></div><div id="piano61" data-key-count="61"></div>',
+    'app.js':'const rows="1234567890-= QWERTYUIOP[] ASDFGHJKL;\' ZXCVBNM,./"; const canonicalPrompt=true;',
+    'styles.css':'.note-flow{min-height:60px}'
+  });
+  await assert.rejects(()=>validateProject(root,{requireAudio:true}),/audio|Salamander/i);
+});

@@ -33,6 +33,7 @@
 - Verify 2560, 1920, 1366, and 390 widths have no document horizontal overflow.
 - Confirm strong text/background contrast, visible focus, reduced motion, and non-color status cues.
 - Confirm `file://` operation, local Web Audio, no remote runtime URLs, and no browser console/page errors.
+- Verify all 641 canonical Salamander FLAC files against pinned upstream hashes and SHA-256. Generated apps need unchanged wrappers, the canonical player, attribution and audio license; validate_project checks these. Prove actual FLAC decoding and nonzero rendered output. Report that SFZ/ARIA auxiliary effects are not emulated.
 
 ## Required commands
 
@@ -40,6 +41,7 @@ From the Skill repository:
 
 ```powershell
 npm run validate
+npm run audio:preview
 npm run test:browser -- --reporter=line
 python C:/Users/24939/.codex/skills/.system/skill-creator/scripts/quick_validate.py .
 powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
@@ -51,4 +53,4 @@ For a local installation, run the guarded installer with an explicit destination
 
 ## Optional polish
 
-Screenshots, motion tuning, decorative backgrounds, and extra synthesized timbres are optional only after every required command and behavioral assertion passes. Never trade prompt correctness, contrast, or offline operation for visual similarity.
+Screenshots, motion tuning and decorative backgrounds are optional only after every required command and behavioral assertion passes. Never trade prompt correctness, contrast, fixed piano timbre or offline operation for visual similarity.

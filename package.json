@@ -7,9 +7,12 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/prompt-state.test.mjs tests/project-validation.test.mjs",
-    "test:browser": "playwright test tests/browser.test.mjs",
-    "validate": "node scripts/validate_score.mjs examples/public-domain-score/score.json && node scripts/validate_project.mjs examples/generated-app && npm test"
+    "test": "node --test tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/prompt-state.test.mjs tests/project-validation.test.mjs tests/audio.test.mjs",
+    "test:browser": "playwright test tests/browser.test.mjs tests/audio-browser.test.mjs",
+    "audio:collect": "node scripts/collect_salamander.mjs",
+    "audio:validate": "node scripts/validate_audio.mjs",
+    "audio:preview": "node scripts/export_audio.mjs dist/audio-preview --preview",
+    "validate": "node scripts/export_audio.mjs examples/generated-app && node scripts/validate_audio.mjs && node scripts/validate_score.mjs examples/public-domain-score/score.json && node scripts/validate_project.mjs examples/generated-app && npm test"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0"

@@ -2,6 +2,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, resolve } from 'node:path';
+import { validateAudioExport } from './audio-export-check.mjs';
 
 async function filesUnder(root) {
   const found = [];
@@ -13,11 +14,11 @@ async function filesUnder(root) {
   return found;
 }
 
-export async function validateProject(input) {
+export async function validateProject(input, {requireAudio=true}={}) {
   const root = input instanceof URL ? fileURLToPath(input) : resolve(input);
   const index = join(root, 'index.html');
   try { await access(index, constants.R_OK); } catch { throw new Error('Missing required index.html'); }
-  const files = (await filesUnder(root)).filter(file => /\.(html|css|js|json)$/i.test(file));
+  const files = (await filesUnder(root)).filter(file => /\.(html|css|js|json)$/i.test(file) && !file.startsWith(join(root,'audio','samples')) && file!==join(root,'audio','manifest.json'));
   const contents = await Promise.all(files.map(file => readFile(file, 'utf8')));
   const source = contents.join('\n');
   const errors = [];
@@ -29,5 +30,10 @@ export async function validateProject(input) {
   if (!/\bcanonicalPrompt\b/.test(source)) errors.push('Flow and keyboard targets must use a canonicalPrompt source');
   if (!/\.note-flow[^}]*\b(?:min-height|height)\s*:/s.test(source)) errors.push('The flow prompt region needs a fixed or minimum footprint to prevent layout movement');
   if (errors.length) throw new AggregateError(errors.map(message => new Error(message)), errors.join('\n'));
-  return { root, files: files.length, offline: true, keyboardRows: 4, noteFlow: true, pianoKeys: 61, canonicalPrompt: true, fixedPrompt: true };
+  let audio;
+  if(requireAudio) {
+    if(!/src=["']audio\/salamander-audio\.js["']/.test(source)||!/new\s+(?:window\.)?SalamanderAudio\s*\(/.test(source))throw Error('Use the canonical Salamander audio player and local script');
+    audio=await validateAudioExport(root);
+  }
+  return { root, files: files.length, offline: true, keyboardRows: 4, noteFlow: true, pianoKeys: 61, canonicalPrompt: true, fixedPrompt: true, audio };
 }

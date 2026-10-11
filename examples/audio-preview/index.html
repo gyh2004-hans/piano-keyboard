@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Salamander 完整钢琴音源试听</title>
+<style>body{max-width:900px;margin:60px auto;padding:0 24px;background:#f4f1eb;color:#252b28;font:17px/1.7 system-ui}button,select,input{font:inherit}button{padding:10px 20px;margin:6px;border:1px solid #78867a;background:white;border-radius:8px;cursor:pointer}button:disabled{opacity:.45}h1{font-size:30px}label{display:block;margin:20px 0}small{display:block;color:#556259}#status{min-height:60px}a{color:#315c49}</style></head>
+<body><link rel="stylesheet" href="audio/audio-loading.css"><h1>Salamander Grand Piano</h1><p>完整 16 力度层 · 48 kHz／24-bit · 无损立体声</p>
+<label>力度 <input id="velocity" type="range" min="1" max="127" value="80"> <output id="value">80</output></label>
+<button id="load">启用声音并加载当前力度</button><button id="low" disabled>低音 C2</button><button id="middle" disabled>中音 C4</button><button id="high" disabled>高音 C6</button><button id="chord" disabled>C 大三和弦</button><button id="stop">停止全部声音</button>
+<p id="status" role="status">点击启用声音；首次加载会解码本地无损采样。</p>
+<small>Alexander Holm · CC BY 3.0。SFZ 映射：kinwie；调音：Markus Fiedler。<a href="audio/ATTRIBUTION.md">来源与改编说明</a> · <a href="audio/LICENSE-Salamander.txt">音源许可</a></small>
+<script src="audio/salamander-audio.js"></script><script src="audio/audio-loading.js"></script><script>
+const audio=new SalamanderAudio(),status=document.querySelector('#status'),slider=document.querySelector('#velocity'),notes=['C2','C4','E4','G4','C6'];
+let generation=0;
+function disable(){for(const id of ['low','middle','high','chord'])document.getElementById(id).disabled=true;}
+slider.oninput=()=>{generation++;audio.stopAll();document.querySelector('#value').value=slider.value;disable();status.textContent='力度已改变，请重新加载。';};
+document.querySelector('#load').onclick=async()=>{const current=++generation;disable();status.textContent='正在加载无损钢琴采样…';try{await audio.preload(notes,{velocity:Number(slider.value)});if(current!==generation)return;for(const id of ['low','middle','high','chord'])document.getElementById(id).disabled=false;status.textContent='已就绪，可以试听。';}catch(error){status.textContent=error.message;}};
+for(const [id,pitches] of [['low',['C2']],['middle',['C4']],['high',['C6']],['chord',['C4','E4','G4']]])document.getElementById(id).onclick=()=>{const when=audio.context.currentTime+.01;for(const note of pitches)audio.play(note,{velocity:Number(slider.value),when,duration:2});status.textContent='播放 '+pitches.join(' · ');};
+document.querySelector('#stop').onclick=()=>{audio.stopAll();status.textContent='已停止。';};
+window.addEventListener('blur',()=>audio.stopAll());document.addEventListener('visibilitychange',()=>{if(document.hidden)audio.stopAll();});window.addEventListener('pagehide',()=>audio.stopAll());
+window.AudioPreview={audio,notes};
+</script></body></html>

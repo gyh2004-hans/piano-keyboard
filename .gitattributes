@@ -1,0 +1,3 @@
+# Preserve upstream Git blob hashes across Windows/Linux checkouts.
+assets/salamander/upstream/** -text
+*.flac -text

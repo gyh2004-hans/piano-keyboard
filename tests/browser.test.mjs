@@ -38,8 +38,10 @@ test('reference output exposes the v2 desktop composition', async ({ page }) => 
 });
 
 test('practice flow and keyboard use one prompt and free release has no penalty', async ({ page }) => {
+  test.setTimeout(90000);
   await page.goto(pageUrl);
   await page.locator('#practiceToggle').click();
+  await expect(page.locator('#status')).toHaveText('等待当前音组', { timeout: 60000 });
   expect(await visibleSets(page)).toEqual(expect.objectContaining({ flow: expect.any(Array) }));
   const before = await visibleSets(page);
   expect(before.keyboard).toEqual(before.flow);
@@ -58,9 +60,11 @@ test('practice flow and keyboard use one prompt and free release has no penalty'
 });
 
 test('demonstration keeps accompaniment audible but out of visible prompts', async ({ page }) => {
+  test.setTimeout(90000);
   await page.goto(pageUrl);
   await page.locator('[data-mode="demo"]').click();
   await page.locator('#practiceToggle').click();
+  await expect(page.locator('#status')).toHaveText('自动示范中', { timeout: 60000 });
   await expect.poll(() => page.evaluate(() => window.PianoDemo.backingStarts())).toBeGreaterThan(0);
   const sets = await visibleSets(page, '.computer-key.demo-note');
   expect(sets.keyboard).toEqual(sets.flow);

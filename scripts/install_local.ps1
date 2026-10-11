@@ -48,6 +48,8 @@ try {
 
   python $validator $stageSkill
   if ($LASTEXITCODE -ne 0) { throw 'Staged piano-keyboard Skill validation failed.' }
+  node (Join-Path $stageSkill 'scripts/validate_audio.mjs')
+  if ($LASTEXITCODE -ne 0) { throw 'Staged Salamander audio validation failed.' }
 
   if (Test-Path -LiteralPath $resolvedDestination) {
     Move-Item -LiteralPath $resolvedDestination -Destination $backupPath
