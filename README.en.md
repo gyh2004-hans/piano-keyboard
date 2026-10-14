@@ -57,7 +57,9 @@ The output is a local HTML/CSS/JavaScript and Web Audio application with no runt
 
 ## Optional 3D Piano module
 
-When a performance view is wanted, add a 3D piano to the existing offline practice app while preserving 2D practice progress. It reuses the main page's 35-key mapping and offers 61 playable keys, ivory and obsidian finishes, and a brown stage with ambient lighting off by default. Each key has a rainbow note trail, from red on the left to violet on the right; the trail grows with hold time, then rises straight upward and fades after release. See the [3D Piano extension specification](references/3d-piano.md) for implementation and acceptance details.
+When a performance view is wanted, add a 3D piano to the existing offline practice app while preserving 2D practice progress. It reuses the main page's 35-key mapping and offers 61 playable keys, ivory and obsidian finishes, and a brown stage with ambient lighting off by default. Each key has a rainbow note trail, from red on the left to violet on the right; the trail grows with hold time, then rises straight upward and fades after release. See the [3D Piano extension specification](skills/piano-keyboard/references/3d-piano.md) for implementation and acceptance details.
+
+The installable Skill lives in `skills/piano-keyboard/`. Instructions, references, schema, runtime tools, player, metadata and all 641 audio recordings are installed together (about 714 MiB). Tests, showcase documentation and generated apps stay outside the installation. `npm run audio:collect` is only needed for maintenance or recovery.
 
 ## Install and update
 
@@ -137,7 +139,7 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 - `A G K 1 4 8` are supplemental bindings used only when the standard layout cannot cover a group, and they must be reported.
 - Never silently transpose, delete, or rewrite source events to make mapping easier.
 
-See the [key-mapping specification](references/keyboard-mapping.md) for the algorithm and worked examples.
+See the [key-mapping specification](skills/piano-keyboard/references/keyboard-mapping.md) for the algorithm and worked examples.
 
 </details>
 
@@ -145,7 +147,7 @@ See the [key-mapping specification](references/keyboard-mapping.md) for the algo
 
 The current flow-character array is the only visible target set. Flow letters, middle-keyboard highlights, and the keys required from the player must match character for character.
 
-Automatic accompaniment may remain audible without adding highlights. Sustained notes from a previously accepted group must not leak into the next prompt. See [prompt consistency](references/prompt-consistency.md) for regression patterns and DOM-set assertions.
+Automatic accompaniment may remain audible without adding highlights. Sustained notes from a previously accepted group must not leak into the next prompt. See [prompt consistency](skills/piano-keyboard/references/prompt-consistency.md) for regression patterns and DOM-set assertions.
 
 ### Practice judgment
 
@@ -156,7 +158,7 @@ Automatic accompaniment may remain audible without adding highlights. Sustained 
 | Long notes | Onset-only judgment; release immediately after acceptance without penalty, waiting, or score-clock freeze |
 | Repeated notes | Release the key before pressing it again |
 
-See the [practice-engine specification](references/practice-engine.md) for complete transitions.
+See the [practice-engine specification](skills/piano-keyboard/references/practice-engine.md) for complete transitions.
 
 ## Layout and preserved capabilities
 
@@ -182,10 +184,10 @@ powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 Run individual data and output checks with:
 
 ```powershell
-node scripts/validate_score.mjs path/to/score.json
-node scripts/normalize_score.mjs path/to/score.json path/to/normalized.json
-node scripts/analyze_mapping.mjs path/to/normalized.json
-node scripts/validate_project.mjs path/to/generated-app
+node skills/piano-keyboard/scripts/validate_score.mjs path/to/score.json
+node skills/piano-keyboard/scripts/normalize_score.mjs path/to/score.json path/to/normalized.json
+node skills/piano-keyboard/scripts/analyze_mapping.mjs path/to/normalized.json
+node skills/piano-keyboard/scripts/validate_project.mjs path/to/generated-app
 ```
 
 The public-domain/synthetic reference app lives in [examples/generated-app](examples/generated-app). Use it to inspect behavior and run acceptance checks; do not copy it wholesale into a user project.
@@ -196,20 +198,20 @@ The public-domain/synthetic reference app lives in [examples/generated-app](exam
 
 | Path | Purpose |
 |---|---|
-| [SKILL.md](SKILL.md) | Agent routing, execution order, and mandatory product invariants |
-| [references/](references/) | Recognition, mapping, state machine, prompt, UI, audio, and acceptance details |
-| [schemas/](schemas/) | Score JSON Schema |
-| [scripts/](scripts/) | Validation, normalization, mapping analysis, packaging, and local-install tools |
+| [SKILL.md](skills/piano-keyboard/SKILL.md) | Agent routing, execution order, and mandatory product invariants |
+| [references/](skills/piano-keyboard/references/) | Recognition, mapping, state machine, prompt, UI, audio, and acceptance details |
+| [schemas/](skills/piano-keyboard/schemas/) | Score JSON Schema |
+| [scripts/](skills/piano-keyboard/scripts/) | Validation, normalization, mapping analysis, packaging, and local-install tools |
 | [tests/](tests/) | Unit and real-browser tests |
 
 ## Bundled full-quality piano audio
 
-The Skill includes Salamander Grand Piano v3 by Alexander Holm: 641 unchanged
+The Skill bundles Salamander Grand Piano v3 by Alexander Holm: 641 unchanged
 48 kHz/24-bit stereo FLAC files (about 714 MiB), 30 recorded pitch centers and
 16 velocity layers mapped to A0–C8. Audio and upstream SFZ/Data are CC BY 3.0,
-not MIT. Keep [attribution](assets/salamander/ATTRIBUTION.md) in exported apps.
-Use the [canonical player](references/audio.md), not model-generated synthesis.
-Run `node scripts/export_audio.mjs APP_DIRECTORY` to create full offline assets
+not MIT. Keep [attribution](skills/piano-keyboard/assets/salamander/ATTRIBUTION.md) in exported apps.
+Use the [canonical player](skills/piano-keyboard/references/audio.md), not model-generated synthesis.
+Run `node skills/piano-keyboard/scripts/export_audio.mjs APP_DIRECTORY` to create full offline assets
 (about 952 MiB after Base64 wrapping); run `npm run audio:preview` for audition.
 After cloning, export audio into `examples/generated-app` before opening it;
 `npm run validate` does this automatically. The player's core sampling, tuning,

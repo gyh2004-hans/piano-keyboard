@@ -20,6 +20,15 @@ rather than independently write oscillator synthesis or pick another font.
 This gives consistent source timbre and articulation; devices and browsers can
 still affect final output. It is a project reference sound, not a universal standard.
 
+## Bundled installation
+
+The complete pinned audio library is downloaded together with the Skill (about
+714 MiB). Installation includes all 641 recordings, upstream mapping and license,
+player, loading UI, inventory and checksums. No additional audio download is needed
+to generate an app. Tests, showcase documentation and generated apps are excluded.
+`node scripts/collect_salamander.mjs` is a maintenance/recovery tool for missing or
+corrupt files; normal installation and generation use the bundled recordings.
+
 ## Assemble a generated app
 
 From the installed Skill directory:

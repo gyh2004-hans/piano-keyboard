@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PracticeModel, makeClock, MODES } from '../scripts/lib/practice-model.mjs';
+import { PracticeModel, makeClock, MODES } from '../skills/piano-keyboard/scripts/lib/practice-model.mjs';
 
 const score = {
   bars: 2, timeSignature: [4, 4], ticksPerBeat: 4,

@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { assetRoot, revision, inventory, gitBlob, sha256, flacInfo } from './lib/salamander.mjs';
+import { assetRoot, upstreamRoot, revision, inventory, gitBlob, sha256, flacInfo } from './lib/salamander.mjs';
 
 export async function validateAudio() {
   const source = await inventory();
@@ -11,7 +11,7 @@ export async function validateAudio() {
   const records=new Map(manifest.files.map(f=>[f.path,f]));
   let count=0,total=0;
   for(const file of source.files) {
-    const record=records.get(file.path),bytes=await readFile(join(assetRoot,'upstream',file.path));
+    const record=records.get(file.path),bytes=await readFile(join(upstreamRoot,file.path));
     if(!record || bytes.length!==file.bytes || gitBlob(bytes)!==file.gitBlob || sha256(bytes)!==record.sha256)throw Error('Audio hash mismatch: '+file.path);
     if(file.path.endsWith('.flac')) {
       const info=flacInfo(bytes);

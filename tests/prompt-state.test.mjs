@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canonicalPrompt, applyPromptClasses } from '../scripts/lib/prompt-state.mjs';
+import { canonicalPrompt, applyPromptClasses } from '../skills/piano-keyboard/scripts/lib/prompt-state.mjs';
 
 test('practice prompt excludes sustained prior notes', () => {
   const step = { targets: [{ note: 'E4' }, { note: 'B4' }] };

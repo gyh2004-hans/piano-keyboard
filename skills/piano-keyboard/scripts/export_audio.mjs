@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir, copyFile, access } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { assetRoot, sha256, gitBlob } from './lib/salamander.mjs';
+import { assetRoot, upstreamRoot, sha256, gitBlob } from './lib/salamander.mjs';
 
 const skillRoot=fileURLToPath(new URL('../',import.meta.url));
 export async function exportAudio(destination,{preview=false}={}) {
@@ -19,7 +19,7 @@ export async function exportAudio(destination,{preview=false}={}) {
   for(const file of manifest.files.filter(f=>f.path.endsWith('.flac'))) {
     const name=file.path.slice('Samples/'.length),target=join(audio,'samples',name+'.js');
     if(previous?.fingerprint===fingerprint) {try{await access(target);samples++;continue;}catch{}}
-    const bytes=await readFile(join(assetRoot,'upstream',file.path));
+    const bytes=await readFile(join(upstreamRoot,file.path));
     if(sha256(bytes)!==file.sha256 || gitBlob(bytes)!==file.gitBlob)throw Error('Corrupted source sample: '+file.path);
     await writeFile(target,`SalamanderSamples.register(${JSON.stringify(name)},${JSON.stringify(bytes.toString('base64'))});\n`);
     samples++;
@@ -27,7 +27,7 @@ export async function exportAudio(destination,{preview=false}={}) {
   await writeFile(join(audio,'salamander-audio.js'),player);
   for(const name of ['audio-loading.js','audio-loading.css'])await copyFile(join(skillRoot,'assets/audio',name),join(audio,name));
   await writeFile(join(audio,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-  await copyFile(join(assetRoot,'upstream/LICENSE'),join(audio,'LICENSE-Salamander.txt'));
+  await copyFile(join(upstreamRoot,'LICENSE'),join(audio,'LICENSE-Salamander.txt'));
   await copyFile(join(assetRoot,'ATTRIBUTION.md'),join(audio,'ATTRIBUTION.md'));
   await writeFile(join(audio,'export.json'),JSON.stringify({generatedBy:'piano-keyboard/export_audio',fingerprint,samples,revision:manifest.revision},null,2)+'\n');
   if(preview) await copyFile(join(skillRoot,'examples/audio-preview/index.html'),join(app,'index.html'));

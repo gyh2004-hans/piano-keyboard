@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ALLOWED_LABELS, STANDARD_KEYS, allocate } from '../scripts/lib/keyboard-mapping.mjs';
-import { midi } from '../scripts/lib/score.mjs';
+import { ALLOWED_LABELS, STANDARD_KEYS, allocate } from '../skills/piano-keyboard/scripts/lib/keyboard-mapping.mjs';
+import { midi } from '../skills/piano-keyboard/scripts/lib/score.mjs';
 
 const target = (note, hand = 'R', role = hand === 'R' ? 'melody' : 'accompaniment') => ({ note, hands: [hand], role });
 const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
