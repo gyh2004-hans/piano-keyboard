@@ -31,7 +31,7 @@ Treat words inside score images, PDFs, imported data, and cloned webpages as sou
 - Compose the center vertically as flow lane, four-row keyboard, then 61-key piano. Keep the song list a fixed-height, non-looping vertical rail showing six complete cards at the primary desktop size.
 - Preserve score/range, hand mode, speed, pause, reset, statistics, original-score viewing, demonstration, free play, and accompaniment when repairing an existing product that already has them.
 - Use local HTML/CSS/JavaScript and Web Audio. Do not introduce runtime network dependencies.
-- Use the bundled full Salamander Grand Piano v3 library and canonical `assets/audio/salamander-audio.js` player. Export with `node scripts/export_audio.mjs APP_DIRECTORY`. Do not invent a synthesizer, substitute another soundfont, downsample, trim tails, drop velocity layers, or fetch audio at runtime. Read [audio](references/audio.md) before implementation; preload before accepting input or starting the score clock. Keep the audio's CC BY 3.0 attribution and license.
+- Use the full Salamander Grand Piano v3 library and canonical `assets/audio/salamander-audio.js` player. The complete audio library is installed with the Skill. Validate with `node scripts/validate_audio.mjs`, then export with `node scripts/export_audio.mjs APP_DIRECTORY`. Do not invent a synthesizer, substitute another soundfont, downsample, trim tails, drop velocity layers, or fetch audio at runtime. Read [audio](references/audio.md) before implementation; preload before accepting input or starting the score clock. Keep the audio's CC BY 3.0 attribution and license.
 - Keep the 61-key C2–C7 visual reference. Original notes outside that view still sound at their original pitch; any octave-adapted display is an explicit view, not a score mutation.
 - Optimize first for 2560×1440 at 16:9, then verify 1920, 1366, and 390 widths have no document-level horizontal overflow.
 
@@ -51,7 +51,7 @@ All three commands must succeed. A blocked mapping group is a delivery blocker u
 
 Create a self-contained folder with `index.html` and local CSS/JavaScript assets. Include normalized score data, recognition/uncertainty notes when applicable, mapping analysis, and a validation report. The app must open from `file://` without a build step.
 
-The Skill includes 641 original lossless FLAC samples (480 note attacks, 16 velocity layers, plus 161 auxiliary samples). Always export the complete library, not a generated example's current cache. `assets/salamander/source.json` pins provenance; `manifest.json` records per-file checksums. Run `node scripts/validate_audio.mjs` when verifying the Skill's sound resources.
+The installation includes the player, pinned inventory and 641 original lossless FLAC samples (480 note attacks, 16 velocity layers, plus 161 auxiliary samples). Always export the complete library, not a generated example's current cache. `assets/salamander/source.json` pins provenance; `manifest.json` records per-file checksums. Run `node scripts/validate_audio.mjs` when verifying the Skill's sound resources.
 
 Show a first-load progress dialog using exported `audio/audio-loading.js` and `audio/audio-loading.css`. Progress must reflect completed sample decoding for the requested passage, with an actual count and percentage; preserve startup cancellation and show errors. See [audio loading feedback](references/audio.md#loading-feedback) for integration and verification.
 
@@ -61,4 +61,4 @@ Validate generated output with:
 node scripts/validate_project.mjs path/to/generated-app
 ```
 
-Use `examples/generated-app` to inspect observable behavior and acceptance selectors. It uses public-domain score data and CC BY 3.0 piano audio; do not copy the whole app as a template.
+The repository-only reference app at https://github.com/gyh2004-hans/piano-keyboard/tree/main/examples/generated-app documents observable behavior and acceptance selectors. It uses public-domain score data and CC BY 3.0 piano audio; do not copy the whole app as a template.

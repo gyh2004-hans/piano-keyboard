@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeScore, selectRange } from '../scripts/lib/normalize.mjs';
+import { normalizeScore, selectRange } from '../skills/piano-keyboard/scripts/lib/normalize.mjs';
 
 const base = {
   schemaVersion: '1.0', id: 'x', title: 'X', bars: 3,

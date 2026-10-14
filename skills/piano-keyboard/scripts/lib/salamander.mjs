@@ -1,9 +1,11 @@
 import { createHash } from 'node:crypto';
+import { join } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 export const revision = '3382bf9496bba2486f5ab0de55a264d1dfc38404';
 export const assetRoot = fileURLToPath(new URL('../../assets/salamander/', import.meta.url));
+export const upstreamRoot = join(assetRoot, 'upstream');
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 export function gitBlob(bytes) {
   return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');

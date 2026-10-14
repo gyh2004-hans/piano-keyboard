@@ -43,14 +43,13 @@ From the Skill repository:
 npm run validate
 npm run audio:preview
 npm run test:browser -- --reporter=line
-python C:/Users/24939/.codex/skills/.system/skill-creator/scripts/quick_validate.py .
+# From the repository root (maintainers only):
 powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 ```
 
-Then inspect `dist/piano-keyboard.zip`. It must contain `SKILL.md`, `references/`, `scripts/`, `schemas/`, and public examples, and must exclude `.git`, `node_modules`, `.npm-cache`, `dist`, `test-results`, `playwright-report`, current application folders, and commercial score assets.
-
-For a local installation, run the guarded installer with an explicit destination, validate the installed directory again, and compare version plus `SKILL.md` hash with the repository.
-
-## Optional polish
-
-Screenshots, motion tuning and decorative backgrounds are optional only after every required command and behavioral assertion passes. Never trade prompt correctness, contrast, fixed piano timbre or offline operation for visual similarity.
+Inspect `dist/piano-keyboard.zip`: it contains only the installed Skill folder,
+references, tools, schema, player, audio preview, pinned metadata and complete audio. Exclude tests,
+showcase docs, generated apps, dependency/cache folders. Verify all 641 audio recordings are included.
+Local maintainers use `scripts/install_local.ps1` from the repository root with an
+explicit destination. The installed Skill must validate without downloading audio.
+Before generating an app, verify all bundled audio source hashes.

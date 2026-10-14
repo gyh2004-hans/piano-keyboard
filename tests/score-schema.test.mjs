@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { midi, validateScore } from '../scripts/lib/score.mjs';
+import { midi, validateScore } from '../skills/piano-keyboard/scripts/lib/score.mjs';
 
 const fixture = JSON.parse(await readFile(new URL('../examples/public-domain-score/score.json', import.meta.url)));
 

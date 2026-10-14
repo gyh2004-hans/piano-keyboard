@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { assetRoot, revision, inventory, fetchBytes, gitBlob, sha256, flacInfo } from './lib/salamander.mjs';
+import { assetRoot, upstreamRoot, revision, inventory, fetchBytes, gitBlob, sha256, flacInfo } from './lib/salamander.mjs';
 
 const source = await inventory();
 if (source.revision !== revision || source.files.some(f => /(^|\/)\.\.(\/|$)/.test(f.path))) throw Error('Invalid source inventory');
@@ -9,7 +9,7 @@ const records = [];
 await Promise.all(Array.from({ length: 6 }, async () => {
   while (next < source.files.length) {
     const file = source.files[next++];
-    const target = join(assetRoot, 'upstream', file.path);
+    const target = join(upstreamRoot, file.path);
     let bytes;
     try { bytes = await readFile(target); } catch {}
     if (!bytes || gitBlob(bytes) !== file.gitBlob) {

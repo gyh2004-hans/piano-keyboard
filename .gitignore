@@ -6,3 +6,5 @@ playwright-report/
 .playwright-mcp/
 *.log
 examples/generated-app/audio/
+
+.cache/

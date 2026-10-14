@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { access } from 'node:fs/promises';
 
 const require = createRequire(import.meta.url);
-const player = new URL('../assets/audio/salamander-audio.js', import.meta.url);
+const player = new URL('../skills/piano-keyboard/assets/audio/salamander-audio.js', import.meta.url);
 
 test('the skill supplies one reusable sample player', async () => {
   await assert.doesNotReject(access(player), 'the canonical player is missing');

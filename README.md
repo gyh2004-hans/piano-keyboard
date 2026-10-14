@@ -46,21 +46,23 @@
 
 ## 可选 3D Piano 模块
 
-需要立体演奏视图时，可在原有离线跟练网页中加入 3D 钢琴，同时保留二维练习进度。它沿用主页面的 35 键映射，提供 61 个可弹奏琴键、象牙白与曜石黑外观，以及棕色舞台；环境灯默认关闭。每个琴键对应从左红到右紫的彩虹音轨线，按住越久线条越长，松开后垂直向上消散。实现与验收要求见 [3D Piano 扩展规范](references/3d-piano.md)。
+需要立体演奏视图时，可在原有离线跟练网页中加入 3D 钢琴，同时保留二维练习进度。它沿用主页面的 35 键映射，提供 61 个可弹奏琴键、象牙白与曜石黑外观，以及棕色舞台；环境灯默认关闭。每个琴键对应从左红到右紫的彩虹音轨线，按住越久线条越长，松开后垂直向上消散。实现与验收要求见 [3D Piano 扩展规范](skills/piano-keyboard/references/3d-piano.md)。
 
-## 内置完整钢琴音源
+## 随 Skill 安装完整钢琴音源
 
-Skill 内置 **Salamander Grand Piano v3**：641 个原始 FLAC 文件，48 kHz／24-bit 立体声，16 个力度层，保留完整尾音，原始音频约 **714 MiB**。30 个录音中心按上游区域映射到 A0–C8 的 88 个音，不是每个键分别录制。采样采用 **CC BY 3.0**，作者 Alexander Holm；[来源与署名](assets/salamander/ATTRIBUTION.md)。
+Skill 随安装提供完整的 **Salamander Grand Piano v3**：641 个原始 FLAC 文件，48 kHz／24-bit 立体声，16 个力度层，保留完整尾音，原始音频约 **714 MiB**。30 个录音中心按上游区域映射到 A0–C8 的 88 个音，不是每个键分别录制。采样采用 **CC BY 3.0**，作者 Alexander Holm；[来源与署名](skills/piano-keyboard/assets/salamander/ATTRIBUTION.md)。
 
-其他模型应直接使用 [统一播放器与接入规范](references/audio.md)，不再自行合成钢琴声音。在 Skill 目录运行：
+其他模型应直接使用 [统一播放器与接入规范](skills/piano-keyboard/references/audio.md)，不再自行合成钢琴声音。在仓库根目录运行：
 
 ```powershell
-node scripts/export_audio.mjs path/to/generated-app
-node scripts/validate_project.mjs path/to/generated-app
+node skills/piano-keyboard/scripts/export_audio.mjs path/to/generated-app
+node skills/piano-keyboard/scripts/validate_project.mjs path/to/generated-app
 npm run audio:preview
 ```
 
-导出资源保留原始无损字节，封装后约 952 MiB，可直接通过 `file://` 播放。生成试听页面为 `dist/audio-preview/index.html`。播放器默认力度 80，支持独立声部、松键与延音踏板；共振与机械噪声文件已收集，但当前浏览器播放器尚未复刻完整 SFZ/ARIA 特效。安装 Skill 会复制完整音源，需预留足够空间。
+导出资源保留原始无损字节，封装后约 952 MiB，可直接通过 `file://` 播放。生成试听页面为 `dist/audio-preview/index.html`。播放器默认力度 80，支持独立声部、松键与延音踏板；共振与机械噪声文件已收集，但当前浏览器播放器尚未复刻完整 SFZ/ARIA 特效。完整音源随 Skill 一起下载（约 714 MiB），生成应用无需另行下载。除音源外的必要工具与说明约 400 KiB；测试与展示文档不进入安装目录。保留固定版本与哈希校验。
+
+安装目录为 `skills/piano-keyboard/`：包含 Agent 说明、参考规范、Schema、运行工具、播放器、音源清单及完整采样。测试、仓库展示文档、生成应用和开发缓存不进入安装目录。`npm run audio:collect` 仅用于维护或恢复缺失的音源。
 
 ## 安装与更新
 
@@ -139,7 +141,7 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 - `A G K 1 4 8` 只在标准键数学上无法覆盖时作为补充键，并必须显式报告。
 - 不为迁就键盘而静默移调、删音或改写源谱。
 
-算法与示例见 [键位映射规范](references/keyboard-mapping.md)。
+算法与示例见 [键位映射规范](skills/piano-keyboard/references/keyboard-mapping.md)。
 
 </details>
 
@@ -147,7 +149,7 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 
 当前流水线字符是唯一的可见目标集合。流水线字母、中间键盘高亮和实际要求用户按下的键必须逐字符相同。
 
-自动伴奏可以发声，但不能多亮键；上一音组延续的长音也不能泄漏到下一组提示。回归模式与 DOM 集合断言见 [提示一致性规范](references/prompt-consistency.md)。
+自动伴奏可以发声，但不能多亮键；上一音组延续的长音也不能泄漏到下一组提示。回归模式与 DOM 集合断言见 [提示一致性规范](skills/piano-keyboard/references/prompt-consistency.md)。
 
 ### 练习判定
 
@@ -158,7 +160,7 @@ Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P Z S X D C F V B H N J M , L . ; / '
 | 长音 | 只判定起音；成立后可立即松开，不扣分、不等待、不冻结谱面时间 |
 | 连续同音 | 必须先松开，再重新按下 |
 
-完整状态转换见 [练习引擎规范](references/practice-engine.md)。
+完整状态转换见 [练习引擎规范](skills/piano-keyboard/references/practice-engine.md)。
 
 
 
@@ -180,13 +182,13 @@ powershell -ExecutionPolicy Bypass -File scripts/package_skill.ps1
 单独检查数据或生成项目：
 
 ```powershell
-node scripts/validate_score.mjs path/to/score.json
-node scripts/normalize_score.mjs path/to/score.json path/to/normalized.json
-node scripts/analyze_mapping.mjs path/to/normalized.json
-node scripts/validate_project.mjs path/to/generated-app
+node skills/piano-keyboard/scripts/validate_score.mjs path/to/score.json
+node skills/piano-keyboard/scripts/normalize_score.mjs path/to/score.json path/to/normalized.json
+node skills/piano-keyboard/scripts/analyze_mapping.mjs path/to/normalized.json
+node skills/piano-keyboard/scripts/validate_project.mjs path/to/generated-app
 ```
 
-公版参考应用位于 [examples/generated-app](examples/generated-app)。克隆后先运行 `node scripts/export_audio.mjs examples/generated-app` 生成离线音源资源（`npm run validate` 会自动执行）；音源导出目录由脚本生成，不重复纳入 Git。它用于观察行为和运行验收，不应被整页复制到用户项目。
+公版参考应用位于 [examples/generated-app](examples/generated-app)。克隆后运行 `node skills/piano-keyboard/scripts/export_audio.mjs examples/generated-app` 生成离线音源资源（`npm run validate` 会自动执行）；音源导出目录由脚本生成，不重复纳入 Git。它用于观察行为和运行验收，不应被整页复制到用户项目。
 
 </details>
 
@@ -194,10 +196,10 @@ node scripts/validate_project.mjs path/to/generated-app
 
 | 路径 | 用途 |
 |---|---|
-| [SKILL.md](SKILL.md) | Agent 路由、执行顺序与不可违反的产品约束 |
-| [references/](references/) | 识谱、映射、状态机、提示、界面、音频与验收细则 |
-| [schemas/](schemas/) | 曲谱 JSON Schema |
-| [scripts/](scripts/) | 校验、规范化、映射分析、打包与本地安装工具 |
+| [SKILL.md](skills/piano-keyboard/SKILL.md) | Agent 路由、执行顺序与不可违反的产品约束 |
+| [references/](skills/piano-keyboard/references/) | 识谱、映射、状态机、提示、界面、音频与验收细则 |
+| [schemas/](skills/piano-keyboard/schemas/) | 曲谱 JSON Schema |
+| [scripts/](skills/piano-keyboard/scripts/) | 校验、规范化、映射分析、打包与本地安装工具 |
 | [tests/](tests/) | 单元测试与真实浏览器测试 |
 
 ## 范围与许可
@@ -206,7 +208,7 @@ node scripts/validate_project.mjs path/to/generated-app
 
 代码与文档采用 [MIT License](LICENSE)。该许可证不授予任何第三方歌曲或曲谱版权。
 
-内置 Salamander 采样与上游映射采用 [CC BY 3.0](assets/salamander/upstream/LICENSE)，不受上述 MIT 许可覆盖。分发生成应用时必须保留音源署名、来源与许可文件。
+Salamander 采样与上游映射采用 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)，不受上述 MIT 许可覆盖。分发生成应用时必须保留音源署名、来源与许可文件。
 
 ---
 

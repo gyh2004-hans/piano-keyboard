@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { validateProject } from '../scripts/lib/project-check.mjs';
+import { validateProject } from '../skills/piano-keyboard/scripts/lib/project-check.mjs';
 
 async function project(files) {
   const root = await mkdtemp(join(tmpdir(), 'piano-keyboard-'));

@@ -32,24 +32,29 @@ $backupPath = Join-Path $destinationParent ".piano-keyboard-backup-$token"
 Assert-SafeSibling $stageRoot '.piano-keyboard-stage-'
 Assert-SafeSibling $backupPath '.piano-keyboard-backup-'
 
-$excluded = @('node_modules', '.npm-cache', 'dist', 'test-results', 'playwright-report', '.git')
+. (Join-Path $PSScriptRoot 'copy_skill.ps1')
 $validatorCandidates = @(
   (Join-Path $env:USERPROFILE '.codex\skills\.system\skill-creator\scripts\quick_validate.py'),
   (Join-Path $env:USERPROFILE '.agents\skills\skill-creator\scripts\quick_validate.py')
 )
 $validator = $validatorCandidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
-if (-not $validator) { throw 'Cannot locate the Codex Skill quick validator.' }
+
 
 try {
   New-Item -ItemType Directory -Force $stageSkill | Out-Null
-  Get-ChildItem -LiteralPath $skillRoot -Force | Where-Object { $excluded -notcontains $_.Name } | ForEach-Object {
-    Copy-Item -LiteralPath $_.FullName -Destination $stageSkill -Recurse -Force
+  Copy-LeanSkill -RepositoryRoot $skillRoot -Destination $stageSkill
+
+  $instructions = Get-Content -LiteralPath (Join-Path $stageSkill 'SKILL.md') -Raw
+  if ($instructions -notmatch '(?ms)^---\r?\n.*?^name: piano-keyboard\r?$.*?^description: .+?^---\r?$') {
+    throw 'Staged piano-keyboard Skill frontmatter is invalid.'
+  }
+  if ($validator) {
+    python $validator $stageSkill
+    if ($LASTEXITCODE -ne 0) { throw 'Staged piano-keyboard Skill validation failed.' }
   }
 
-  python $validator $stageSkill
-  if ($LASTEXITCODE -ne 0) { throw 'Staged piano-keyboard Skill validation failed.' }
   node (Join-Path $stageSkill 'scripts/validate_audio.mjs')
-  if ($LASTEXITCODE -ne 0) { throw 'Staged Salamander audio validation failed.' }
+  if ($LASTEXITCODE -ne 0) { throw 'Staged bundled audio validation failed.' }
 
   if (Test-Path -LiteralPath $resolvedDestination) {
     Move-Item -LiteralPath $resolvedDestination -Destination $backupPath

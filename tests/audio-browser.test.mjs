@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { exportAudio } from '../scripts/export_audio.mjs';
-import { validateAudioExport } from '../scripts/lib/audio-export-check.mjs';
+import { exportAudio } from '../skills/piano-keyboard/scripts/export_audio.mjs';
+import { validateAudioExport } from '../skills/piano-keyboard/scripts/lib/audio-export-check.mjs';
 
 const destination=fileURLToPath(new URL('../dist/audio-preview/',import.meta.url));
 const url=pathToFileURL(destination+'/index.html').href;
