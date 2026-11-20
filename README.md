@@ -227,3 +227,12 @@ Salamander 采样与上游映射采用 [CC BY 3.0](https://creativecommons.org/l
 生成页面后运行 `node skills/piano-keyboard/scripts/audit_interface.mjs APP EVIDENCE`，
 检查四尺寸真实DOM及截图；仍需实际操作验证音频与跟练行为。
 维护者运行 `npm run test:interface` 验证配方的四尺寸布局与偏差拦截（需要 Playwright 浏览器）。
+
+
+### 减少生成后的多轮修补
+
+先运行 `node skills/piano-keyboard/scripts/export_runtime.mjs APP` 导出可在file协议下加载的经典脚本，
+复用现有经过测试的映射、分段速度时钟、判定模型，以及新增音符流/61键钢琴视图组件。
+接线要求见 [运行时接入](skills/piano-keyboard/references/runtime-integration.md)。
+这些组件不含曲谱，不等同于完整应用；音频、输入、控件、原谱及示范仍须接入并操作验收。
+浏览器审计增加音符重叠、钢琴标签归属及提示高亮一致性检查。

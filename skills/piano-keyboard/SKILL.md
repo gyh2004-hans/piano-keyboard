@@ -7,6 +7,10 @@ description: Use for piano-score transcription, score-data validation, offline k
 
 Build offline PC-first piano practice apps in which falling or sliding characters, computer-key highlights, audio, and score progression remain synchronized without changing source pitches.
 
+## First action for generation — use tested code
+
+Read [runtime integration](references/runtime-integration.md), then run `node scripts/export_runtime.mjs APP_DIRECTORY`. Load the exported classic scripts before your UI adapter. Reuse `PianoRuntime` for mapping, score clock and onset judgment, and `PianoView` for flow and piano rendering. Do not independently rewrite these algorithms. The export is built from the same modules as the Skill tests, works with `file://`, and contains no music or application-specific source. It is a reusable core, not a complete player: follow the integration contract for audio, input, controls and demonstration.
+
 ## Default delivery baseline — read first
 
 For a new app, reproduce the bundled **慢慢弹 light desktop baseline**, not a newly invented theme. First read [baseline recipe](references/baseline-recipe.md) and [interface design](references/interface-design.md). Copy `assets/interface/baseline.css` into the output and use its DOM contract. This is required even for a single song. Change the visual baseline only when the user explicitly requests a different design.

@@ -24,6 +24,18 @@ export function inspectInterface() {
   check(all('#piano61 .piano-key').length===61,'Expected 61 piano keys');
   check(all('#piano61 .piano-key.white').length===36&&all('#piano61 .piano-key.black').length===25,'Expected 36 white and 25 black keys');
   check(JSON.stringify(all('[data-mode]').map(e=>e.dataset.mode).sort())===JSON.stringify(['auto','both','demo','free','left','right']),'Expected six distinct mode controls');
+  const groups=all('#noteFlow .flow-group');
+  const glyphs=groups.map(g=>[...g.querySelectorAll('.flow-letter')].map(e=>e.getBoundingClientRect()));
+  for(let i=0;i<glyphs.length;i++)for(let j=i+1;j<glyphs.length;j++){
+    check(!glyphs[i].some(a=>glyphs[j].some(b=>Math.min(a.right,b.right)>Math.max(a.left,b.left)+1&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)+1)),'Flow letters overlap between groups');
+  }
+  const current=all('#noteFlow .flow-group.current .flow-letter').map(e=>e.textContent.trim().toUpperCase()).sort();
+  const targets=all('#computerKeyboard .computer-key.target, #computerKeyboard .computer-key.demo-note').map(e=>e.querySelector('strong')?.textContent.trim().toUpperCase()).sort();
+  if(current.length)check(JSON.stringify(current)===JSON.stringify(targets),'Current flow and keyboard targets differ');
+  for(const key of all('#piano61 .piano-key'))for(const label of key.querySelectorAll('.pitch,.letter,.piano-label')){
+    const k=key.getBoundingClientRect(),b=label.getBoundingClientRect();
+    check(b.left>=k.left-1&&b.right<=k.right+1&&b.top>=k.top-1&&b.bottom<=k.bottom+1,'Piano label outside its own key');
+  }
   const cards=all('#songRail .song-card');
   check(cards.length>0,'Expected real song cards');
   check(cards.every(e=>e.tagName==='BUTTON'&&!e.disabled&&!/即将推出|coming soon/i.test(e.textContent)),'Song cards must be enabled real buttons, not placeholders');
@@ -39,7 +51,7 @@ export function inspectInterface() {
     const settings=box('.baseline-settings');
     check(!!settings&&rail.right<flow.left&&keyboard.right<settings.left,'Expected library / practice / settings columns');
   }
-  return {width,height:innerHeight,errors,counts:{songs:cards.length,physicalKeys:all('#computerKeyboard .computer-key').length}};
+  return {width,height:innerHeight,errors:[...new Set(errors)],counts:{songs:cards.length,physicalKeys:all('#computerKeyboard .computer-key').length}};
 }
 
 export async function audit(directory,evidence) {

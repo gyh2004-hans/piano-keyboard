@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,readFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import vm from 'node:vm';
+import {exportRuntime} from '../skills/piano-keyboard/scripts/export_runtime.mjs';
+test('exports file-safe runtime using tested modules; honors tempo and onset gate',async()=>{
+ const out=await mkdtemp(join(tmpdir(),'piano-runtime-'));await exportRuntime(out);
+ const context=vm.createContext({structuredClone,performance});context.window=context;
+ vm.runInContext(await readFile(join(out,'piano-runtime.js'),'utf8'),context);
+ const api=context.PianoRuntime;
+ const score={bars:2,ticksPerBeat:4,timeSignature:[4,4],tempoMap:[{bar:1,tick:0,bpm:120},{bar:2,tick:0,bpm:60}],events:[{bar:1,tick:4,duration:4,notes:['C4'],hand:'R'}]};
+ assert.equal(api.makeClock(score).at(32),6);
+ const model=new api.PracticeModel(score);model.resume();assert.equal(model.press('C4',1),'early');assert.equal(model.index,0);model.update(.5);assert.equal(model.press('C4',2),'correct');
+ assert.equal(api.STANDARD_LABELS.length,35);
+ vm.runInContext(await readFile(join(out,'piano-view.js'),'utf8'),context);
+ const frames=context.PianoView.layoutFlow([{time:0},{time:.01},{time:.02}],0,1000);
+ assert.ok(frames[1].x-frames[0].x>=40);assert.ok(frames[2].x>frames[1].x);
+});

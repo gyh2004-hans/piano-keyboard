@@ -8,7 +8,7 @@
 
 ## 2. 使用本地样式和固定 DOM 顺序
 
-复制 `assets/interface/baseline.css` 到输出 `baseline.css`，在页面中加载。样式是可复用基础，不是完整应用。下面是 DOM 结构契约；每个区域必须填入真实运行控件和数据，不能原样交付空节点。
+先按 [runtime integration](runtime-integration.md) 执行 `node scripts/export_runtime.mjs APP`，导出并加载核心、视图与baseline.css。样式是可复用基础，不是完整应用。下面是 DOM 结构契约；每个区域必须填入真实运行控件和数据，不能原样交付空节点。
 
 ```html
 <header class="baseline-header"><div class="baseline-brand">慢慢弹</div><span>键盘钢琴练习</span></header>
