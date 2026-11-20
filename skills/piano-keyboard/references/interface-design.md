@@ -8,7 +8,7 @@ At 2560×1440 use a three-column shell:
 - center: song/status, progress, flow lane, four-row keyboard, 61-key piano, then statistics;
 - right: hand/mode/range/speed controls, pause/reset/demo, and concise guidance.
 
-Brand colors and background may vary. Preserve the center order and make it visually dominant. The flow lane occupies the upper center, keyboard highlighting stays directly beneath it, and the piano anchors the bottom.
+Default to the bundled light baseline in [baseline recipe](baseline-recipe.md); use `assets/interface/baseline.css`. Change colors/background only on explicit user request. Preserve the center order and make it visually dominant. The flow lane occupies the upper center, keyboard highlighting stays directly beneath it, and the piano anchors the bottom.
 
 ## Flow lane
 
@@ -26,7 +26,7 @@ The 35 standard keys are the stable chromatic performance set. Supplemental and 
 
 Render 61 piano keys from C2 through C7 directly below the computer keyboard. The piano may show sounding/target pitch state but must not become the source of flow letters.
 
-The song rail has a fixed viewport that shows exactly six complete cards at the primary desktop size. Native wheel/trackpad scrolling moves vertically, stops at the first/last item, and never wraps. Do not auto-advance or carousel-loop the list.
+The song rail has a fixed viewport that shows exactly six complete cards when six or more real songs exist (otherwise show only available songs with empty remaining space) at the primary desktop size. Native wheel/trackpad scrolling moves vertically, stops at the first/last item, and never wraps. Do not auto-advance or carousel-loop the list.
 
 ## Responsive and accessibility checks
 

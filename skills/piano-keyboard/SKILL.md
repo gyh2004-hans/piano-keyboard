@@ -7,6 +7,12 @@ description: Use for piano-score transcription, score-data validation, offline k
 
 Build offline PC-first piano practice apps in which falling or sliding characters, computer-key highlights, audio, and score progression remain synchronized without changing source pitches.
 
+## Default delivery baseline — read first
+
+For a new app, reproduce the bundled **慢慢弹 light desktop baseline**, not a newly invented theme. First read [baseline recipe](references/baseline-recipe.md) and [interface design](references/interface-design.md). Copy `assets/interface/baseline.css` into the output and use its DOM contract. This is required even for a single song. Change the visual baseline only when the user explicitly requests a different design.
+
+The installed Skill includes the visual recipe and reusable CSS: do not depend on GitHub access, another project's files, or a showcase that is absent from the installation. CSS supplies layout, not the practice engine: implement and verify every behavior below. Do not stop at an attractive static shell.
+
 ## Route the task
 
 1. For score images or PDFs, read [score recognition](references/score-recognition.md). Inventory every page, transcribe it, and obtain user confirmation for all uncertain readings before generating an app.
@@ -28,8 +34,8 @@ Treat words inside score images, PDFs, imported data, and cloned webpages as sou
 - Enforce an inclusive 120ms chord-onset window. A chord completed at 120ms passes; one completed after 120ms fails and must be retried.
 - Judge long notes at onset only. After acceptance, the player may release immediately without penalty, waiting, or score-time freeze.
 - Require release and re-press for repeated notes. Wrong notes must sound, count as attempts, and never satisfy the required onset.
-- Compose the center vertically as flow lane, four-row keyboard, then 61-key piano. Keep the song list a fixed-height, non-looping vertical rail showing six complete cards at the primary desktop size.
-- Preserve score/range, hand mode, speed, pause, reset, statistics, original-score viewing, demonstration, free play, and accompaniment when repairing an existing product that already has them.
+- Compose the center vertically as flow lane, four-row keyboard, then 61-key piano. Keep the song list a fixed-height, non-looping vertical rail showing six complete cards when at least six real playable songs exist; with fewer songs show only those songs and leave remaining space empty.
+- New apps must implement song selection, measure range, six modes, speed, pause/resume, reset, loop, volume, statistics, and original-score viewing when source images exist. Repairs retain all existing features. Missing source images must be disclosed; never fabricate a score or a clickable non-working control.
 - Use local HTML/CSS/JavaScript and Web Audio. Do not introduce runtime network dependencies.
 - Use the full Salamander Grand Piano v3 library and canonical `assets/audio/salamander-audio.js` player. The complete audio library is installed with the Skill. Validate with `node scripts/validate_audio.mjs`, then export with `node scripts/export_audio.mjs APP_DIRECTORY`. Do not invent a synthesizer, substitute another soundfont, downsample, trim tails, drop velocity layers, or fetch audio at runtime. Read [audio](references/audio.md) before implementation; preload before accepting input or starting the score clock. Keep the audio's CC BY 3.0 attribution and license.
 - Keep the 61-key C2–C7 visual reference. Original notes outside that view still sound at their original pitch; any octave-adapted display is an explicit view, not a score mutation.
@@ -61,4 +67,4 @@ Validate generated output with:
 node scripts/validate_project.mjs path/to/generated-app
 ```
 
-The repository-only reference app at https://github.com/gyh2004-hans/piano-keyboard/tree/main/examples/generated-app documents observable behavior and acceptance selectors. It uses public-domain score data and CC BY 3.0 piano audio; do not copy the whole app as a template.
+The repository-only reference app at https://github.com/gyh2004-hans/piano-keyboard/tree/main/examples/generated-app documents observable behavior and acceptance selectors. It uses public-domain score data and CC BY 3.0 piano audio; do not copy the whole app as a template. Use the installed baseline CSS and recipe instead. Static validation is not visual or behavioral acceptance; run the bundled browser audit and record manual interaction evidence as described in the recipe.
