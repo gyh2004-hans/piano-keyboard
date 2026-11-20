@@ -26,14 +26,18 @@ const prompt = R.canonicalPrompt(model.current, allocation);
 R.applyPromptClasses(document.querySelectorAll('.computer-key'), prompt, 'target');
 PianoView.renderPiano(document.getElementById('piano61')); // 初始化一次
 // 每帧只更新位置；groups必须按time排序，同一时刻的音先合并成一个和弦组。
-PianoView.renderFlow(document.getElementById('noteFlow'), [
-  {time:model.current?.time || 0, current:true, prompt}
-], model.time);
+const lane = document.getElementById('noteFlow');
+const scale = PianoView.flowScale(model.steps, lane.clientWidth); // 每段/resize时计算
+const groups = model.steps.map((step,i)=>({
+  id:step.position, time:step.time, current:i===model.index,
+  prompt:R.canonicalPrompt(step, i===model.index ? allocation : R.allocate(step.targets))
+}));
+PianoView.renderFlow(lane, groups, model.time, scale);
 ```
 
 上例专用于auto练习模式，不能直接用于demo。demo的可见step必须先过滤 `target.hands.includes("R")`，再allocate和canonicalPrompt；不能直接用含双手目标的model.current渲染字母。示范音频仍必须调度完整双手事件。
 
-示例只展示接口，不是完整应用。实际音符流应传入当前组及后续可见组，各组分别由canonicalPrompt生成prompt。同一首歌/模式下维持稳定像素/秒比例：初始化时用 `const scale=PianoView.flowScale(model.steps,lane.clientWidth)` 计算整段固定比例；每帧传当前及后续最多6组到 `renderFlow(lane,groups,model.time,scale)`。窗口尺寸/曲目/速度变化后重算scale，不能每帧随可见组变化缩放，也不能为每个音单独指定相同left。`renderFlow`按时间计算位置并为密集音符提供最小间隔；多个字符只有同组和弦才能共用横坐标。
+示例只展示接口，不是完整应用。实际音符流应传入当前组及后续可见组，各组分别由canonicalPrompt生成prompt。同一首歌/模式下维持稳定像素/秒比例：初始化时用 `const scale=PianoView.flowScale(model.steps,lane.clientWidth)` 计算整段固定比例；每帧传入所选范围的完整groups到 `renderFlow(lane,groups,model.time,scale)`，组件自己按视口裁剪。不能按index切成6/7个一批，也不能清空flow-notes再重画。每组id由原谱bar/tick或固定事件ID决定，不能使用可见列表序号。窗口尺寸/曲目/速度变化后重算scale，不能每帧随可见组变化缩放，也不能为每个音单独指定相同left。`renderFlow`按时间计算位置并为密集音符提供最小间隔；多个字符只有同组和弦才能共用横坐标。
 
 - `makeClock(score,speed).at(tickPosition)`分段积分全部tempoMap，音符结束时间用at(start+duration)，不能用首个bpm乘整曲。timeSignature的tick定义以schema为准。
 - `model.resume()/pause()/reset()`及`model.update(deltaSeconds)`控制时间；update返回本轮到点的自动伴奏事件。不要另开伴奏setInterval。时间速度已在model.clock里换算，delta再乘speed会双重加速。
@@ -59,3 +63,13 @@ PianoView.renderFlow(document.getElementById('noteFlow'), [
 | 暂停/切出窗口/原谱弹窗 | 无挂音、不误计分、不把表单输入当琴键 |
 
 禁止以validate_project通过替代以上场景。该工具主要检查资源与源码；audit_interface补充字母重叠、标签归属、当前提示一致性及布局，但仍不证明实际音频或整曲通关。保留失败记录，修复后只重跑相关检查，不修改验收脚本迎合输出。
+
+
+## 连续流水线的硬约束
+
+位置唯一公式：`x = laneWidth * .28 + (onsetSeconds - scoreTimeSeconds) * pixelsPerSecond`。
+整段固定时间原点，index只改变current状态，不参与横坐标，也不重置时间或队列。练习等待未弹对音时，整条时间轴冻结；弹对后从原坐标继续向左，不能把下一批音符搬回右侧。休止表现为更大的时间间隔。
+
+renderFlow必须接收完整所选段的分组（可先缓存各组prompt），只在进入/离开可见区时增删节点，已有音符节点跨第7/8/14/15组仍保留。禁止CSS对transform添加transition、spring、bounce或enter动画；rAF已逐帧给出时间位置，二次补间会造成滞后和回弹。只在显式重置/循环回段首时允许时间回到起点。
+
+至少录制/采样连续16个音组的示范：同一音组在两帧中的dx必须等于`-deltaScoreTime*scale`，不受current/index改变影响；暂停dx为0；恢复无跳跃。不能以静态截图替代这一项。
