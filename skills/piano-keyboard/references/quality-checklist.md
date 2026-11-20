@@ -57,3 +57,11 @@ showcase docs, generated apps, dependency/cache folders. Verify all 641 audio re
 Local maintainers use `scripts/install_local.ps1` from the repository root with an
 explicit destination. The installed Skill must validate without downloading audio.
 Before generating an app, verify all bundled audio source hashes.
+
+
+## Continuous flow and rhythm regression
+
+- Reuse full-timeline keyed rendering; no six/seven-note batches, per-frame replaceChildren on the lane, or CSS transform tweening.
+- Sample at least sixteen onset boundaries and prove surviving DOM identity and x2-x1 = -(scoreTime2-scoreTime1)*scale; pause freezes positions. Explicit reset/loop is the only timeline rewind.
+- Run audit_rhythm.mjs and attach rhythm-review.md with exact source measures, rests, ties, subdivisions and onset/duration values. Warnings require review, absence of warnings is not proof of fidelity.
+- Letter-note tutorials cannot certify the original arrangement's rhythm. Previously simplified scores must be identified and re-transcribed when original fidelity is required.

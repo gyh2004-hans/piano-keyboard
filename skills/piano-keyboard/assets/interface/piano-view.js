@@ -8,13 +8,20 @@
   return groups.map(group=>({group,x:width*.28+(group.time-time)*scale}));
  }
  function renderFlow(lane,groups,time,scale){
-  let notes=lane.querySelector('.flow-notes');if(!notes){notes=document.createElement('div');notes.className='flow-notes';lane.append(notes);}
-  notes.replaceChildren();
+  let notes=lane.querySelector('.flow-notes');if(!notes){notes=document.createElement('div');notes.className='flow-notes';notes.style.cssText='position:absolute;inset:0;pointer-events:none';lane.append(notes);}
+  const existing=new Map([...notes.children].map(n=>[n.dataset.flowId,n]));
+  const retained=new Set();
   for(const {group,x} of layoutFlow(groups,time,lane.clientWidth,scale)){
-   const node=document.createElement('div');node.className='flow-group '+(group.current?'current':'future');node.style.left='0';node.style.transform=`translate(${x}px,-50%)`;
-   for(const item of group.prompt){const letter=document.createElement('span');letter.className='flow-letter';letter.textContent=item.label.toLowerCase();node.append(letter);}
-   notes.append(node);
+   if(x < -80 || x > lane.clientWidth+80)continue;
+   const id=String(group.id??group.time);if(retained.has(id))throw Error('Merge simultaneous notes into one flow group; group IDs must be unique');retained.add(id);
+   let node=existing.get(id);if(!node){node=document.createElement('div');node.dataset.flowId=id;notes.append(node);}
+   node.className='flow-group '+(group.current?'current':group.time<time?'past':'future');node.style.left='0';node.style.transition='none';node.style.animation='none';node.style.transform=`translate(${x}px,-50%)`;
+   const signature=JSON.stringify(group.prompt.map(p=>p.label));
+   if(node.dataset.prompt!==signature){node.replaceChildren();node.dataset.prompt=signature;
+    for(const item of group.prompt){const letter=document.createElement('span');letter.className='flow-letter';letter.textContent=item.label.toLowerCase();node.append(letter);}
+   }
   }
+  for(const [id,node] of existing)if(!retained.has(id))node.remove();
  }
  function renderPiano(container){
   container.replaceChildren();let whites=0;
