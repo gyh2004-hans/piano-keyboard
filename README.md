@@ -214,3 +214,16 @@ Salamander 采样与上游映射采用 [CC BY 3.0](https://creativecommons.org/l
 
 <p align="center"><sub>Bring the score. Follow the flow. Play it.</sub><br>
 <a href="#一条命令开始">开始安装</a> · <a href="LICENSE">MIT License</a></p>
+
+
+## 网页成品基准
+
+新建页面默认采用随 Skill 安装的“慢慢弹”浅色三栏基准，而不是由模型自行设计主题。
+具体尺寸、DOM结构、控件行为、实施顺序与交付证据见
+[成品实施配方](skills/piano-keyboard/references/baseline-recipe.md)。
+[基础样式](skills/piano-keyboard/assets/interface/baseline.css)可直接复用，不含商业曲谱或当前应用源码。
+单曲页面保留真实曲库，不以虚构歌曲凑满六张卡片。
+
+生成页面后运行 `node skills/piano-keyboard/scripts/audit_interface.mjs APP EVIDENCE`，
+检查四尺寸真实DOM及截图；仍需实际操作验证音频与跟练行为。
+维护者运行 `npm run test:interface` 验证配方的四尺寸布局与偏差拦截（需要 Playwright 浏览器）。

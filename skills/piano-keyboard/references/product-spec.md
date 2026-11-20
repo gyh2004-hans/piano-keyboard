@@ -2,7 +2,7 @@
 
 ## Purpose and non-goals
 
-Build or repair a local, desktop-first piano-learning page. The player follows a flow of computer-key characters while a fixed 35-key chromatic layout automatically changes octave bank. Do not copy a reference site's branding/background, mutate source music, or require a server/framework/account.
+Build or repair a local, desktop-first piano-learning page. The player follows a flow of computer-key characters while a fixed 35-key chromatic layout automatically changes octave bank. Use the bundled light visual baseline; change themes only on explicit user request. Never mutate source music or require a server/framework/account.
 
 ## Required modes
 
@@ -14,7 +14,7 @@ Build or repair a local, desktop-first piano-learning page. The player follows a
 
 ## Controls to preserve
 
-When an existing app already exposes them, retain current song library, original-score viewing, left/right/both-hand selection, measure range, speed, pause/resume, reset, loop, volume, statistics, demo, free play, and accompaniment. A redesign is not permission to remove working product scope.
+New apps must implement the following controls; existing apps retain current song library, original-score viewing, left/right/both-hand selection, measure range, speed, pause/resume, reset, loop, volume, statistics, demo, free play, and accompaniment. A redesign is not permission to remove working product scope.
 
 ## Timing and scoring
 
@@ -22,7 +22,7 @@ All score events, rests, tempo changes, accompaniment, and demonstration use one
 
 ## Visual contract
 
-The center is vertically ordered: flow lane, four-row keyboard, 61-key piano. The left song rail shows six complete cards and scrolls without looping. Flow and computer targets are character-first; avoid permanent extra pitch labels in the flow.
+The center is vertically ordered: flow lane, four-row keyboard, 61-key piano. The left song rail shows six complete cards when at least six real songs exist; fewer songs leave empty space. Scrolling never loops. Flow and computer targets are character-first; avoid permanent extra pitch labels in the flow.
 
 ## Output boundary
 

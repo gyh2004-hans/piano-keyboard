@@ -27,13 +27,17 @@
 
 ### Interface and audio
 
-- At 2560×1440 show six complete song cards, 45 physical keys, 35 standard bindings, and 61 piano keys.
+- At 2560×1440 show six complete real song cards when at least six songs exist (otherwise only available songs), 45 physical keys, 35 standard bindings, and 61 piano keys.
 - Verify the vertical order flow → keyboard → piano.
 - Verify wheel scrolling stops naturally and does not loop.
 - Verify 2560, 1920, 1366, and 390 widths have no document horizontal overflow.
 - Confirm strong text/background contrast, visible focus, reduced motion, and non-color status cues.
 - Confirm `file://` operation, local Web Audio, no remote runtime URLs, and no browser console/page errors.
 - Verify all 641 canonical Salamander FLAC files against pinned upstream hashes and SHA-256. Generated apps need unchanged wrappers, the canonical player, attribution and audio license; validate_project checks these. Prove actual FLAC decoding and nonzero rendered output. Report that SFZ/ARIA auxiliary effects are not emulated.
+
+## Visual baseline gate
+
+Read [baseline recipe](baseline-recipe.md). Copy its bundled CSS and preserve the default light appearance unless the user requests a change. Run `node scripts/audit_interface.mjs APP EVIDENCE`, inspect every screenshot, and execute the recipe's interaction table against the generated app. Do not substitute repository reference-app tests for output tests. Placeholder songs, simplified source music without authorization, decorative controls, and hidden selector tokens do not satisfy acceptance. Record blocked or untested checks honestly.
 
 ## Required commands
 
