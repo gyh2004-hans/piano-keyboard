@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test tests/interface-baseline.test.mjs tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/prompt-state.test.mjs tests/project-validation.test.mjs tests/audio.test.mjs tests/distribution.test.mjs tests/install-local.test.mjs",
+    "test": "node --test tests/runtime-export.test.mjs tests/interface-baseline.test.mjs tests/score-schema.test.mjs tests/normalize-score.test.mjs tests/keyboard-mapping.test.mjs tests/practice-engine.test.mjs tests/prompt-state.test.mjs tests/project-validation.test.mjs tests/audio.test.mjs tests/distribution.test.mjs tests/install-local.test.mjs",
     "test:interface": "node --test tests/interface-browser.test.mjs",
     "test:browser": "playwright test tests/browser.test.mjs tests/audio-browser.test.mjs",
     "audio:collect": "node skills/piano-keyboard/scripts/collect_salamander.mjs",

@@ -12,3 +12,11 @@
 @media(max-width:1100px){.baseline-layout{grid-template-columns:minmax(0,1fr) 270px;gap:18px}.baseline-library{grid-column:1/-1}#songRail{height:300px}.song-card{flex-basis:43.333px;min-height:43.333px;padding:5px 12px}#songRail{gap:8px}.baseline-main{padding:20px}#noteFlow{height:200px}.computer-key{height:46px}.computer-row{gap:3px}}
 @media(max-width:850px){.baseline-header{padding:0 16px;height:68px}.baseline-main{padding:20px 16px}.baseline-layout{display:flex;flex-direction:column}.baseline-layout>*{width:100%}.baseline-settings{order:1}.baseline-practice{order:2}#noteFlow{margin:14px;height:170px}#computerKeyboard{margin:14px;padding:8px}.computer-key strong{font-size:13px}.computer-key span{font-size:9px}.baseline-piano-scroll{margin:14px}.baseline-stats{padding:14px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Positioning contract: labels belong to each key, never the outer piano. */
+#piano61 .piano-key{position:relative;padding:0;touch-action:none;color:var(--ink)}
+#piano61 .piano-key.black{position:absolute;color:#fff}
+#piano61 .pitch,#piano61 .letter{position:absolute;left:0;width:100%;text-align:center;pointer-events:none;white-space:nowrap}
+#piano61 .pitch{bottom:35px;font-size:9px}#piano61 .letter{bottom:12px;font-size:12px}
+#noteFlow .flow-notes{position:absolute;inset:0;pointer-events:none}
+#noteFlow .flow-group{top:50%;min-width:28px;margin-left:-14px}
